@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { PrivateRouteConfig } from "./routes/RouteConfig";
+import { PrivateRouteConfig, PublicRouteConfig } from "./routes/RouteConfig";
 import NavigationProvider from "../src/layout/NavigationProvider";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,6 +10,11 @@ const App = () => {
     <BrowserRouter>
       <NavigationProvider>
         <Routes>
+          {PublicRouteConfig.map((route) => (
+            <Route key={route.key} path={route.path} element={<route.component />}>
+              
+            </Route>
+          ))}
           {PrivateRouteConfig.map((route) => (
             <Route key={route.key} path={route.path} element={<route.component />}>
               {route.children?.map((child) => (

@@ -1,4 +1,11 @@
 /* ===== PAGE ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -6,37 +13,15 @@
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at top, rgba(99,102,241,0.15), transparent 60%),
+    radial-gradient(circle at top, rgba(99, 102, 241, 0.15), transparent 60%),
     linear-gradient(180deg, #f9fafb, #eef2ff);
-  padding: 2rem;
 }
 
-/* ===== HEADER (OUTSIDE CARD) ===== */
-.auth-header {
-  text-align: center;
-  /* margin-bottom: 2rem; */
+.auth-subtitle {
+  font-size: 2rem;
+  color: #6b7280;
+  line-height: 1.65;
 }
-
-/* ===== LOGO CONTAINER ===== */
-.auth-logo-text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* margin-bottom: 10rem; */
-}
-
-/* ===== LOGO IMAGE ===== */
-.auth-logo-text img {
-  height: 15rem;
-  width: auto;
-  object-fit: contain;
-}
-
-/* ===== SUBTLE LOGO POLISH ===== */
-.auth-logo-text img {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
-}
-
 
 .auth-heading {
   font-size: 1.8rem;
@@ -46,22 +31,6 @@
   text-align: center;
 }
 
-
-/* Auth subtitle (brand promise) */
-.auth-subtitle {
-  font-size: 2.5rem;
-  color: #6b7280;
-  max-width: 360px;
-  margin: 0 auto 2.25rem;
-  line-height: 1.65;
-  text-align: center;
-}
-.auth-subtitle span {
-  color: #4f46e5;
-  font-weight: 500;
-}
-
-
 /* ===== CARD ===== */
 .auth-card {
   width: 100%;
@@ -70,8 +39,8 @@
   padding: 2.5rem;
   border-radius: 16px;
   box-shadow:
-    0 24px 48px rgba(0,0,0,0.08),
-    0 8px 16px rgba(0,0,0,0.05);
+    0 24px 48px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.05);
   animation: fadeUp 0.35s ease-out;
 }
 
@@ -105,7 +74,7 @@
 
 /* ===== DIVIDER ===== */
 .auth-divider {
-  margin: 2rem 0 1.25rem;
+  margin: 1rem 0 1rem;
   border-top: 1px solid #e5e7eb;
 }
 
@@ -133,6 +102,7 @@
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

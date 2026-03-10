@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useLocation, Navigate, useNavigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Footer } from "../components/footer/Footer";
 import { Header } from "../components/header/Header";
 export const Root = () => {

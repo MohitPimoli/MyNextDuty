@@ -9,11 +9,6 @@ export const PrivateRouteConfig = [
     path: "/",
     children: [
       {
-        key: "AuthPage",
-        path: "",
-        component: AuthPage,
-      },
-      {
         key: "Loader",
         path: "",
         component: Loader,
@@ -27,4 +22,10 @@ export const PrivateRouteConfig = [
   },
 ];
 
-export const PublicRouteConfig = [];
+export const PublicRouteConfig = [
+  {
+    key: "AuthPage",
+    path: "",
+    component: AuthPage,
+  },
+];

@@ -4,7 +4,8 @@ import InputField from "../../components/common/InputField";
 import formConfig from "../../config/formConfig";
 import { useAuth } from "../../hooks/useAuth";
 import Loader from "../../components/common/Loader";
-import logo from "../../assets/mynextdutylogo.svg"
+import logo from "../../assets/mynextdutylogo.svg";
+import { Footer } from "../../components/footer/Footer";
 
 import "./AuthPage.css";
 
@@ -62,7 +63,7 @@ export const AuthPage = () => {
       } else {
         const { confirmPassword, ...signupPayload } = values;
         const result = await signup(signupPayload);
-        
+
         // If signup is successful, switch to login mode
         if (result?.success) {
           switchMode("login");
@@ -81,68 +82,56 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className="auth-page">
-      {/* ===== HEADER ===== */}
-      <div className="auth-header">
-        <div className="auth-logo-text">
-          <img src={logo} alt="MyNextDuty Logo" />
-        </div>
+    <>
+      <div className="auth-page">
         <p className="auth-subtitle">
           Find clarity in your <span>next step</span>
         </p>
+        {/* ===== FORM CARD ===== */}
+        <div className="auth-card">
+          <h2 className="auth-heading">
+            {mode === "login" ? "Welcome back" : "Create your account"}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            {fields.map((field) => (
+              <InputField
+                key={field.name}
+                label={field.label}
+                type={field.type}
+                placeholder={field.placeholder}
+                value={values[field.name]}
+                error={errors[field.name]}
+                onChange={(e) => handleChange(field.name, e.target.value)}
+              />
+            ))}
+
+            {mode === "login" && <div className="auth-forgot">Forgot password?</div>}
+
+            <Button type="submit" disabled={loading}>
+              {loading ? <Loader size="sm" /> : mode === "login" ? "Log In" : "Create Account"}
+            </Button>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <div className="auth-divider" />
+
+            <div className="auth-switch">
+              {mode === "login" ? (
+                <button type="button" onClick={() => switchMode("signup")}>
+                  New here? Create an account
+                </button>
+              ) : (
+                <button type="button" onClick={() => switchMode("login")}>
+                  Back to login
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
-
-      {/* ===== FORM CARD ===== */}
-      <div className="auth-card">
-        <h2 className="auth-heading">
-          {mode === "login" ? "Welcome back" : "Create your account"}
-        </h2>
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          {fields.map((field) => (
-            <InputField
-              key={field.name}
-              label={field.label}
-              type={field.type}
-              placeholder={field.placeholder}
-              value={values[field.name]}
-              error={errors[field.name]}
-              onChange={(e) => handleChange(field.name, e.target.value)}
-            />
-          ))}
-
-          {mode === "login" && (
-            <div className="auth-forgot">Forgot password?</div>
-          )}
-
-          <Button type="submit" disabled={loading}>
-            {loading ? (
-              <Loader size="sm" />
-            ) : mode === "login" ? (
-              "Log In"
-            ) : (
-              "Create Account"
-            )}
-          </Button>
-
-          {error && <p className="auth-error">{error}</p>}
-
-          <div className="auth-divider" />
-
-          <div className="auth-switch">
-            {mode === "login" ? (
-              <button type="button" onClick={() => switchMode("signup")}>
-                New here? Create an account
-              </button>
-            ) : (
-              <button type="button" onClick={() => switchMode("login")}>
-                Back to login
-              </button>
-            )}
-          </div>
-        </form>
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
