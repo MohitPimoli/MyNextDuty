@@ -17,6 +17,6 @@ public interface VerificationService {
   /** Resend verification email for logged-in user. Invalidates old tokens and generates new one. */
   GlobalMessageDto resendVerification(User user);
 
-  /** Verify email using token. Validates token and marks user as verified. */
-  GlobalMessageDto verifyEmail(String token);
+  /** Verify email using token and userId. Validates token and marks user as verified. */
+  GlobalMessageDto verifyEmail(String token,Long userId);
 }

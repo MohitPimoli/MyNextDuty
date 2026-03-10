@@ -13,6 +13,7 @@ import com.mynextduty.core.service.VerificationService;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,14 +57,14 @@ public class VerificationServiceImpl implements VerificationService {
       return GlobalMessageDto.builder().message("Email is already verified").build();
     }
     tokenRepository.markAllTokensAsUsedForUser(user);
-    log.info("Invalidated existing tokens for user {}", user.getEmail());
+    log.debug("Invalidated existing tokens for user {}", user.getEmail());
     return sendVerificationEmail(user);
   }
 
   @Override
   @Transactional
-  public GlobalMessageDto verifyEmail(String tokenValue) {
-    var tokenOpt = tokenRepository.findByToken(tokenValue);
+  public GlobalMessageDto verifyEmail(String tokenValue, Long userId) {
+      Optional<EmailVerificationToken> tokenOpt = tokenRepository.findByUserId(userId);
     if (tokenOpt.isEmpty()) {
       log.warn("Invalid verification token attempted: {}", tokenValue);
       return GlobalMessageDto.builder().message("Invalid verification token").build();
@@ -74,12 +75,16 @@ public class VerificationServiceImpl implements VerificationService {
       log.warn("Invalid token for user {}: {}", token.getUser().getEmail(), reason);
       return GlobalMessageDto.builder().message("Verification token is " + reason).build();
     }
+    if(!tokenValue.equalsIgnoreCase(token.getToken())){
+        log.warn("Token does not match for userId: {}", userId);
+        return GlobalMessageDto.builder().message("Invalid verification token").build();
+    }
     User user = token.getUser();
     user.setVerified(true);
     userRepository.save(user);
     token.setUsed(true);
     tokenRepository.save(token);
-    log.info("Successfully verified email for user {}", user.getEmail());
+    log.debug("Successfully verified email for user {}", user.getEmail());
     return GlobalMessageDto.builder().message("Email verified successfully").build();
   }
 
@@ -107,7 +112,7 @@ public class VerificationServiceImpl implements VerificationService {
               .data(emailData)
               .build();
       notificationService.send(request);
-      log.info("Verification email sent to {}", user.getEmail());
+      log.debug("Verification email sent to {}", user.getEmail());
       return GlobalMessageDto.builder().message("Verification email sent successfully").build();
     } catch (Exception e) {
       log.error("Failed to send verification email to {}", user.getEmail(), e);

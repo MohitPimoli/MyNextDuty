@@ -44,7 +44,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             .isVerified(false)
             .build();
     User savedUser = userRepository.save(user);
-    log.info("New user registered with email: {}", registerRequestDto.getEmail());
+    log.debug("New user registered with email: {}", registerRequestDto.getEmail());
     verificationService.sendVerificationIfRequired(savedUser);
     return GlobalMessageDto.builder()
         .message("User registered successfully. Please check your email to verify your account.")
@@ -53,7 +53,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
   @Override
   public GlobalMessageDto verifyEmail(String token) {
-    return verificationService.verifyEmail(token);
+    return verificationService.verifyEmail(token, currentUserService.getCurrentUserId());
   }
 
   @Override

@@ -58,7 +58,7 @@ public class AuthController {
    */
   @GetMapping("/verify-email")
   public ResponseDto<GlobalMessageDto> verifyEmail(@RequestParam String token) {
-    GlobalMessageDto result = verificationService.verifyEmail(token);
+    GlobalMessageDto result = verificationService.verifyEmail(token,currentUserService.getCurrentUserId());
     return new SuccessResponseDto<>(result);
   }
 

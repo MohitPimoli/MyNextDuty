@@ -47,7 +47,7 @@ public class EmailNotification implements NotificationChannel {
       helper.setSubject(subject);
       helper.setText(body, true);
       mailSender.send(message);
-      log.info("Email sent to {}", to);
+      log.debug("Email sent to {}", to);
     } catch (Exception e) {
       log.error("Failed to send email to {}", to, e);
     }

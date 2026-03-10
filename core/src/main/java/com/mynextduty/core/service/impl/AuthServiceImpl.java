@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
     userRepository.save(user);
     String token = jwtUtil.generateToken(customUserDetails);
     String refreshToken = jwtUtil.generateRefreshToken(customUserDetails);
-    log.info("User '{}' logged in successfully", authRequestDto.getEmail());
+    log.debug("User '{}' logged in successfully", authRequestDto.getEmail());
     return AuthResponseDto.builder()
         .id(user.getId().toString())
         .email(user.getEmail())
@@ -115,13 +115,13 @@ public class AuthServiceImpl implements AuthService {
       }
     }
     if (oldRefreshToken == null) {
-      log.info("Missing refresh token in cookies");
+      log.debug("Missing refresh token in cookies");
       throw new TokenException("Invalid refresh token");
     }
     try {
       String email = jwtUtil.extractUsername(oldRefreshToken);
       if (jwtUtil.isTokenExpired(oldRefreshToken)) {
-        log.info("Refresh token expired for user: {}", email);
+        log.debug("Refresh token expired for user: {}", email);
         throw new ExpiredJwtException(null, null, "Refresh token expired");
       }
       blacklistToken.blackListRefreshToken(oldRefreshToken);
