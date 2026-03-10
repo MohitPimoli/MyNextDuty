@@ -64,7 +64,7 @@ core:
     secret: ${JWT_SECRET:}
     refresh:
       expiration: ${JWT_REFRESH_EXPIRATION:259200}
-  baseUrl: ${CORE_BASE_URL:http://localhost:8080/core}
+  baseUrl: ${CORE_BASE_URL:http://localhost:5173/}
   email:
     verification:
      tokenExpiryMinutes: ${EMAIL_VERIFICATION_TOKEN_EXPIRY_MINUTES:15}

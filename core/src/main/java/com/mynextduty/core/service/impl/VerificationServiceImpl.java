@@ -36,7 +36,7 @@ public class VerificationServiceImpl implements VerificationService {
   @Value("${core.email.verification.tokenExpiryMinutes:}")
   private int tokenExpiryMinutes;
 
-  @Value("${core.baseUrl:http://localhost:8080/core}")
+  @Value("${core.baseUrl:http://localhost:5173}")
   private String baseUrl;
 
   @Override
