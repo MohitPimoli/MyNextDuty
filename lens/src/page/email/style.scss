@@ -1,0 +1,51 @@
+/* Container that centers the verification card */
+.verification-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f6f9;
+}
+
+
+/* Main card that holds verification messages */
+.verification-card {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  width: 420px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+
+/* Success text styling */
+.success-text {
+  color: #2ecc71;
+}
+
+
+/* Error text styling */
+.error-text {
+  color: #e74c3c;
+}
+
+
+/* Button used to resend verification link */
+.resend-button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+/* Hover effect for resend button */
+.resend-button:hover {
+  background-color: #2980b9;
+}

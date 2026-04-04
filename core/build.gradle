@@ -116,7 +116,7 @@ sonarqube {
 
 jar {
     manifest {
-        attributes('Class-Path': configurations.collect { it.getName() }.join(' '), 'Main-Class': 'com.ttn.ck.TunerCoreApplication')
+        attributes('Class-Path': configurations.collect { it.getName() }.join(' '), 'Main-Class': 'com.mynextduty.core.CoreApplication')
     }
 }
 

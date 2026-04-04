@@ -19,8 +19,8 @@ public class UserAccountController {
 
 
   @PostMapping("/verify-email")
-  public ResponseDto<GlobalMessageDto> verifyEmail(@RequestParam("token") String token) {
-    return new SuccessResponseDto<>(userAccountService.verifyEmail(token));
+  public ResponseDto<GlobalMessageDto> verifyEmail() {
+    return new SuccessResponseDto<>(userAccountService.verifyEmail());
   }
 
   @PostMapping("/verify")

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const toastService = {
+const toastService = {
   success(message) {
     toast.success(message, {
       position: "top-right",
@@ -45,3 +45,5 @@ export const toastService = {
     });
   },
 };
+
+export default toastService;

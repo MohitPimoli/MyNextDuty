@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useGeolocation } from "../../hooks/useGeolocation";
-import LocationNearbyMap from "../../components/map/LocationNearbyMap";
-import {
-  updateUserLocation,
-  getNearbyUsers,
-} from "../../service/location.service";
+import Map from "../../components/Map/Map";
+import { updateUserLocation, getNearbyUsers } from "../../service/location.service";
 
-const NearbyUsersPage = () => {
+const MapPage = () => {
   const userId = Number(localStorage.getItem("userId"));
   const { location, error } = useGeolocation();
 
@@ -35,13 +32,11 @@ const NearbyUsersPage = () => {
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">Nearby Users</h1>
-        <p className="text-gray-500 text-sm">
-          Set your location and discover users around you
-        </p>
+        <p className="text-gray-500 text-sm">Set your location and discover users around you</p>
       </div>
 
       <div className="bg-white shadow rounded-2xl p-5 space-y-4">
-        <LocationNearbyMap
+        <Map
           location={effectiveLocation}
           nearbyUsers={nearbyUsers}
           onLocationChange={setSelectedLocation}
@@ -72,4 +67,4 @@ const NearbyUsersPage = () => {
   );
 };
 
-export default NearbyUsersPage;
+export default MapPage;

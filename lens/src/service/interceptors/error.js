@@ -1,7 +1,7 @@
 import axios from "axios";
 import { navigate } from "../navigation.service";
 import { persistor } from "../../redux/store";
-import { CORE_BASE_URL, API_URLS } from "../../api/apiUrls";
+import API_URLS, { CORE_BASE_URL } from "../api/apiUrls";
 import { setToken } from "../../util/tokenService";
 
 let isRefreshing = false;
@@ -16,16 +16,12 @@ const processQueue = (error, token = null) => {
 
 export const errorInterceptor = async (error, api) => {
   const { response, config } = error;
-
-  // Network / CORS / server down
   if (!response) {
     navigate("/server-error");
     return Promise.reject(error);
   }
 
   const originalRequest = config;
-
-  // 🔐 Custom refresh logic (your backend contract)
   if (response.status === 401 && response.data?.errorCode === 1001 && !originalRequest._retry) {
     if (isRefreshing) {
       return new Promise((resolve, reject) => {

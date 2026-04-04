@@ -8,7 +8,7 @@ public interface UserAccountService {
   GlobalMessageDto register(
       UserRegisterRequestDto registerRequestDto, HttpServletResponse httpServletResponse);
 
-  GlobalMessageDto verifyEmail(String token);
+  GlobalMessageDto verifyEmail();
 
   GlobalMessageDto verify();
 }

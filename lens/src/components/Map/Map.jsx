@@ -1,18 +1,11 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import {
-  userMarkerIcon,
-  nearbyUserMarkerIcon,
-} from "../../util/leafletIcon";
+import { userMarkerIcon, nearbyUserMarkerIcon } from "../../util/leafletIcon";
 import "leaflet/dist/leaflet.css";
 import "./map.scss";
 
-const LocationNearbyMap = ({ location, nearbyUsers, onLocationChange }) => {
+const Map = ({ location, nearbyUsers, onLocationChange }) => {
   return (
-    <MapContainer
-      center={[location.latitude, location.longitude]}
-      zoom={15}
-      className="map"
-    >
+    <MapContainer center={[location.latitude, location.longitude]} zoom={15} className="map">
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       {/* Your location */}
@@ -32,11 +25,7 @@ const LocationNearbyMap = ({ location, nearbyUsers, onLocationChange }) => {
 
       {/* Nearby users */}
       {nearbyUsers.map((u) => (
-        <Marker
-          key={u.id}
-          position={[u.latitude, u.longitude]}
-          icon={nearbyUserMarkerIcon}
-        >
+        <Marker key={u.id} position={[u.latitude, u.longitude]} icon={nearbyUserMarkerIcon}>
           <Popup>
             <strong>
               {u.firstName} {u.lastName}
@@ -50,4 +39,4 @@ const LocationNearbyMap = ({ location, nearbyUsers, onLocationChange }) => {
   );
 };
 
-export default LocationNearbyMap;
+export default Map;

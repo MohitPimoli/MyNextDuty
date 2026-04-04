@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { authService } from "../service/auth.service";
-import { toastService } from "../util/toastService";
+import toastService  from "../util/toastService";
 import {
   authLoginRequest,
   authLoginSuccess,

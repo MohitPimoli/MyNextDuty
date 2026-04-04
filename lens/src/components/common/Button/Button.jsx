@@ -14,6 +14,8 @@ const Button = React.forwardRef(
       rightIcon,
       as: Component = "button",
       style,
+      type = "button",
+      onClick,
       ...props
     },
     ref
@@ -32,6 +34,7 @@ const Button = React.forwardRef(
         }}
         disabled={Component === "button" ? isDisabled : undefined}
         aria-busy={loading}
+        onClick={onClick}
         {...props}
       >
         {loading ? (

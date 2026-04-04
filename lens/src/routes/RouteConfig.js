@@ -1,7 +1,8 @@
 import { Root } from "../layout/Root";
 import Loader from "../components/common/Loader";
 import AuthPage from "../page/auth/AuthPage";
-import NearbyUsersPage from "../page/location/NearbyUsersPage";
+import MapPage from "../page/location/MapPage";
+import VerifyEmail from "../page/email/EmailVerificationPage";
 export const PrivateRouteConfig = [
   {
     key: "Root",
@@ -16,7 +17,7 @@ export const PrivateRouteConfig = [
       {
         key: "NearbyUsers",
         path: "nearby",
-        component: NearbyUsersPage,
+        component: MapPage,
       },
     ],
   },
@@ -27,5 +28,10 @@ export const PublicRouteConfig = [
     key: "AuthPage",
     path: "",
     component: AuthPage,
+  },
+  {
+    key: "VerifyEmail",
+    path: "/verify-email",
+    component: VerifyEmail,
   },
 ];

@@ -38,7 +38,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
       log.error("authentication is either null or the User in not authenticated.");
-      throw new GenericApplicationException("User not found", 404);
+      throw new GenericApplicationException("User not found", 400);
     }
     Object userDetailsObj = authentication.getPrincipal();
     if (userDetailsObj instanceof CustomUserDetails customUserDetails) {

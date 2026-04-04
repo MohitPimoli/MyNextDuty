@@ -1,11 +1,15 @@
-import api from "../api/axiosInstance";
-import { API_URLS } from "../api/apiUrls";
+import commonService from "./commonService";
 
-export const authService = {
+export const locationService = {
   getLocation(userId) {
-    return api.get(API_URLS.LOCATION.USER`${userId}`);
+    return commonService.LOCATION.getUserLocation(userId);
   },
 };
-export const updateUserLocation = (userId,payload) => {return api.post(API_URLS.LOCATION.UPDATE, payload,{params:{userId:userId},});};
 
-export const getNearbyUsers = (userId) => {return api.get(API_URLS.LOCATION.NEARBY, {params:{userId},});};
+export const updateUserLocation = (userId, payload) => {
+  return commonService.LOCATION.updateUserLocation(userId, payload);
+};
+
+export const getNearbyUsers = (userId, radius) => {
+  return commonService.LOCATION.getNearbyUsers(userId, radius);
+};

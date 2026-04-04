@@ -40,7 +40,7 @@ public class User {
   @Column(unique = true, nullable = false)
   private String email;
 
-  @Column(nullable = false,name = "password_hash")
+  @Column(nullable = false, name = "password_hash")
   private String passwordHash;
 
   @Column(nullable = false)
@@ -79,10 +79,10 @@ public class User {
   private List<UserGoal> userGoals;
 
   @Builder.Default
-  @Column(nullable = false,name = "created_at")
+  @Column(nullable = false, name = "created_at")
   private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at")
+  @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
   private LocalDateTime lastAccessTime;
@@ -90,9 +90,9 @@ public class User {
   @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private UserLocation userLocation;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+  @ManyToOne
+  @JoinColumn(name = "role_id")
+  private Role role;
 
   @PreUpdate
   public void preUpdate() {

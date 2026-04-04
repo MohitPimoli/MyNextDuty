@@ -1,13 +1,11 @@
 import { useState } from "react";
+import "./style.scss";
 import Button from "../../components/common/Button";
 import InputField from "../../components/common/InputField";
 import formConfig from "../../config/formConfig";
 import { useAuth } from "../../hooks/useAuth";
 import Loader from "../../components/common/Loader";
-import logo from "../../assets/mynextdutylogo.svg";
-import { Footer } from "../../components/footer/Footer";
-
-import "./AuthPage.css";
+import { Footer } from "../../components/Hooter/Footer";
 
 const buildInitialValues = (mode) => {
   const values = {};

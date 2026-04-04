@@ -1,40 +1,37 @@
-import api from "../api/axiosInstance";
-import { API_URLS } from "../api/apiUrls";
+import commonService from "./commonService";
 import passwordEncoder from "../util/encoder";
 
 export const authService = {
   async login(payload) {
     try {
-      // Encrypt password before sending
       const encryptedPayload = {
         ...payload,
-        password: await passwordEncoder.encryptPassword(payload.password)
+        password: await passwordEncoder.encryptPassword(payload.password),
       };
-      
-      return api.post(API_URLS.AUTH.LOGIN, encryptedPayload);
+      return commonService.AUTH.login(encryptedPayload);
     } catch (error) {
-      return api.post(API_URLS.AUTH.LOGIN, payload);
+      return commonService.AUTH.login(payload);
     }
   },
 
   async signup(payload) {
     try {
-      // Encrypt password before sending
       const encryptedPayload = {
         ...payload,
-        password: await passwordEncoder.encryptPassword(payload.password)
+        password: await passwordEncoder.encryptPassword(payload.password),
       };
-      
-      return api.post(API_URLS.AUTH.SIGNUP, encryptedPayload);
+
+      return commonService.AUTH.signup(encryptedPayload);
     } catch (error) {
+      return commonService.AUTH.signup(payload);
     }
   },
 
   logout() {
-    return api.post(API_URLS.AUTH.LOGOUT);
+    return commonService.AUTH.logout();
   },
 
   refreshToken() {
-    return api.post(API_URLS.AUTH.REFRESH);
+    return commonService.AUTH.refreshToken();
   },
 };

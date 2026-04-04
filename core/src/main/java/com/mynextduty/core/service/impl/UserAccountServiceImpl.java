@@ -3,13 +3,16 @@ package com.mynextduty.core.service.impl;
 import com.mynextduty.core.config.security.PassDecryptor;
 import com.mynextduty.core.dto.GlobalMessageDto;
 import com.mynextduty.core.dto.user.UserRegisterRequestDto;
+import com.mynextduty.core.entity.Role;
 import com.mynextduty.core.entity.User;
 import com.mynextduty.core.exception.GenericApplicationException;
+import com.mynextduty.core.repository.RoleRepository;
 import com.mynextduty.core.repository.UserRepository;
 import com.mynextduty.core.service.CurrentUserService;
 import com.mynextduty.core.service.UserAccountService;
 import com.mynextduty.core.service.VerificationService;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +28,7 @@ public class UserAccountServiceImpl implements UserAccountService {
   private final CurrentUserService currentUserService;
   private final PassDecryptor passDecryptor;
   private final PasswordEncoder passwordEncoder;
+  private final RoleRepository roleRepository;
 
   @Override
   @Transactional
@@ -33,6 +37,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     if (userRepository.findByEmail(registerRequestDto.getEmail()).isPresent()) {
       throw new GenericApplicationException("User already exists.", 409);
     }
+    Optional<Role> roleOptional = roleRepository.findById(3L);
     User user =
         User.builder()
             .email(registerRequestDto.getEmail())
@@ -42,6 +47,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             .firstName(registerRequestDto.getFirstName())
             .lastName(registerRequestDto.getLastName())
             .isVerified(false)
+            .role(roleOptional.get())
             .build();
     User savedUser = userRepository.save(user);
     log.debug("New user registered with email: {}", registerRequestDto.getEmail());
@@ -52,8 +58,10 @@ public class UserAccountServiceImpl implements UserAccountService {
   }
 
   @Override
-  public GlobalMessageDto verifyEmail(String token) {
-    return verificationService.verifyEmail(token, currentUserService.getCurrentUserId());
+  public GlobalMessageDto verifyEmail() {
+    //    return verificationService.verifyEmail(token, currentUserService.getCurrentUserId());
+    // TODO: sned verification mail to user.
+    return GlobalMessageDto.builder().build();
   }
 
   @Override
