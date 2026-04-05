@@ -26,7 +26,7 @@ const VerifyEmail = () => {
           toastService.success(response?.data?.message);
           setStatus("success");
           setTimeout(() => {
-            navigate(Routes.AUTH.LOGIN);
+            navigate(Routes.USER.HOME);
           }, 3000);
         }
       } catch (error) {

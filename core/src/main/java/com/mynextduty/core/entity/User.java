@@ -59,7 +59,7 @@ public class User {
 
   private LocalDate dateOfBirth;
 
-  @Column(nullable = false)
+  @Column(nullable = false,name = "is_verified")
   @Builder.Default
   private boolean isVerified = false;
 

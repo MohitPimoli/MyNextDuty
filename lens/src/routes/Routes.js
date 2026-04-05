@@ -1,5 +1,5 @@
 const Routes = {
   AUTH: { LOGIN: "/login" },
-  USER:{ },
+  USER: { HOME: "/" },
 };
 export default Routes;

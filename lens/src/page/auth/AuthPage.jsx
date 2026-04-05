@@ -30,15 +30,12 @@ export const AuthPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
     fields.forEach((field) => {
       const value = values[field.name] || "";
-
       if (field.required && !value) {
         newErrors[field.name] = `${field.label} is required`;
         return;
       }
-
       if (field.validation) {
         const result = field.validation(value, values);
         if (result !== true) {
@@ -46,7 +43,6 @@ export const AuthPage = () => {
         }
       }
     });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -54,21 +50,18 @@ export const AuthPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     try {
       if (mode === "login") {
-        await login(values);
+        const response  = await login(values);
       } else {
         const { confirmPassword, ...signupPayload } = values;
         const result = await signup(signupPayload);
-
-        // If signup is successful, switch to login mode
+        // If signup is successful, switch to log in mode
         if (result?.success) {
           switchMode("login");
         }
       }
     } catch (error) {
-      // Error handling is done in the useAuth hook with toast messages
       console.error("Auth error:", error);
     }
   };
@@ -90,7 +83,6 @@ export const AuthPage = () => {
           <h2 className="auth-heading">
             {mode === "login" ? "Welcome back" : "Create your account"}
           </h2>
-
           <form onSubmit={handleSubmit} className="auth-form">
             {fields.map((field) => (
               <InputField
@@ -103,26 +95,21 @@ export const AuthPage = () => {
                 onChange={(e) => handleChange(field.name, e.target.value)}
               />
             ))}
-
             {mode === "login" && <div className="auth-forgot">Forgot password?</div>}
-
             <Button type="submit" disabled={loading}>
               {loading ? <Loader size="sm" /> : mode === "login" ? "Log In" : "Create Account"}
             </Button>
-
             {error && <p className="auth-error">{error}</p>}
-
             <div className="auth-divider" />
-
             <div className="auth-switch">
               {mode === "login" ? (
-                <button type="button" onClick={() => switchMode("signup")}>
+                <Button type="button" onClick={() => switchMode("signup")}>
                   New here? Create an account
-                </button>
+                </Button>
               ) : (
-                <button type="button" onClick={() => switchMode("login")}>
+                <Button type="button" onClick={() => switchMode("login")}>
                   Back to login
-                </button>
+                </Button>
               )}
             </div>
           </form>

@@ -76,9 +76,7 @@ public class VerificationServiceImpl implements VerificationService {
     }
     User user = token.getUser();
     user.setVerified(true);
-    userRepository.save(user);
     token.setUsed(true);
-    tokenRepository.save(token);
     return GlobalMessageDto.builder().message("Email verified successfully").build();
   }
 
