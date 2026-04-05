@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import commonService from "../../service/commonService";
 import "./style.scss";
 import toastService from "../../util/toastService";
-import Routes from "../../routes/Routes";
+import { ROUTE_PATHS } from "../../routes/RoutePath";
 import Paper from "../../components/common/Paper";
 import Button from "../../components/common/Button";
 import RedirectCountdown from "../../components/common/Redirect/RedirectCountdown";
@@ -15,7 +15,6 @@ const VerifyEmail = () => {
   const token = searchParams.get("token");
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState(null);
-  const [counter, setCounter] = useState(3);
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -26,7 +25,7 @@ const VerifyEmail = () => {
           toastService.success(response?.data?.message);
           setStatus("success");
           setTimeout(() => {
-            navigate(Routes.USER.HOME);
+            navigate(ROUTE_PATHS.HOME);
           }, 3000);
         }
       } catch (error) {
@@ -50,7 +49,7 @@ const VerifyEmail = () => {
       if (response?.data?.status === 200) {
         toastService.success(response?.data?.message);
         setTimeout(() => {
-          navigate(Routes.AUTH.LOGIN);
+          navigate(ROUTE_PATHS.LOGIN);
         }, 3000);
       }
     } catch (error) {

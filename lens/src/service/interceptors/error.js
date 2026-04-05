@@ -1,5 +1,6 @@
 import axios from "axios";
 import { navigate } from "../navigation.service";
+import { ROUTE_PATHS } from "../../routes/RoutePath";
 import { persistor } from "../../redux/store";
 import API_URLS, { CORE_BASE_URL } from "../api/apiUrls";
 import { setToken } from "../../util/tokenService";
@@ -17,7 +18,7 @@ const processQueue = (error, token = null) => {
 export const errorInterceptor = async (error, api) => {
   const { response, config } = error;
   if (!response) {
-    navigate("/server-error");
+    navigate(ROUTE_PATHS.SERVER_ERROR);
     return Promise.reject(error);
   }
 
@@ -54,7 +55,7 @@ export const errorInterceptor = async (error, api) => {
     } catch (refreshError) {
       processQueue(refreshError, null);
       persistor.purge();
-      navigate("/login");
+      navigate(ROUTE_PATHS.LOGIN);
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
@@ -64,19 +65,19 @@ export const errorInterceptor = async (error, api) => {
   // 🚦 Global status handling
   switch (response.status) {
     case 401:
-      navigate("/login");
+      navigate(ROUTE_PATHS.LOGIN);
       break;
     case 403:
-      navigate("/forbidden");
+      navigate(ROUTE_PATHS.FORBIDDEN);
       break;
     case 404:
-      navigate("/not-found");
+      navigate(ROUTE_PATHS.NOT_FOUND);
       break;
     case 500:
     case 502:
     case 503:
     case 504:
-      navigate("/server-error");
+      navigate(ROUTE_PATHS.SERVER_ERROR);
       break;
     default:
       break;
