@@ -6,6 +6,7 @@ import formConfig from "../../config/formConfig";
 import { useAuth } from "../../hooks/useAuth";
 import Loader from "../../components/common/Loader";
 import { Footer } from "../../components/Hooter/Footer";
+import { BUTTON_VARIANTS } from "../../components/common/Button/button.constants";
 
 const buildInitialValues = (mode) => {
   const values = {};
@@ -52,7 +53,7 @@ export const AuthPage = () => {
     if (!validateForm()) return;
     try {
       if (mode === "login") {
-        const response  = await login(values);
+        await login(values);
       } else {
         const { confirmPassword, ...signupPayload } = values;
         const result = await signup(signupPayload);
@@ -96,7 +97,11 @@ export const AuthPage = () => {
               />
             ))}
             {mode === "login" && <div className="auth-forgot">Forgot password?</div>}
-            <Button type="submit" disabled={loading}>
+            <Button
+              type="submit"
+              disabled={loading}
+              variant={BUTTON_VARIANTS.SECONDARY}
+            >
               {loading ? <Loader size="sm" /> : mode === "login" ? "Log In" : "Create Account"}
             </Button>
             {error && <p className="auth-error">{error}</p>}

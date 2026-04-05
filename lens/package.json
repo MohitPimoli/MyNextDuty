@@ -5,22 +5,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src --ext .js",
+    "lint": "eslint src",
     "stylelint-check": "stylelint-config-prettier-check",
     "lint:fix": "npm run lint -- --fix",
-    "lint-deploy-test": "eslint src --ext .js -f html -o reportname.html",
+    "lint-deploy-test": "eslint src -f html -o reportname.html",
     "sonarqube": "sonar-scanner",
     "coverage": "npm test -- --coverage",
     "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "lint-staged": {
-    "*.js": [
+    "*.{js,jsx}": [
       "eslint"
     ]
   },
