@@ -1,12 +1,12 @@
-import {useState} from "react";
+import { useState } from "react";
 import "./style.scss";
 import Button from "../../components/common/Button";
 import InputField from "../../components/common/InputField";
 import formConfig from "../../config/formConfig";
-import {useAuth} from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import Loader from "../../components/common/Loader";
-import {Footer} from "../../components/Hooter/Footer";
-import {BUTTON_VARIANTS} from "../../components/common/Button/button.constants";
+import { Footer } from "../../components/Hooter/Footer";
+import { BUTTON_VARIANTS } from "../../components/common/Button/button.constants";
 
 const showLaunchNotice = import.meta.env.DEV || import.meta.env.VITE_SHOW_LAUNCH_NOTICE === "true";
 

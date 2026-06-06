@@ -49,3 +49,4 @@ reportname.html
 *.njsproj
 *.sln
 *.sw?
+.env.development
