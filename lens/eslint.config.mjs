@@ -2,17 +2,16 @@ import js from '@eslint/js'
 import globals from 'globals'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import importPlugin from 'eslint-plugin-import'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'coverage', 'node_modules', 'reportname.html']),
+  globalIgnores(['dist', '.next', 'coverage', 'node_modules', 'reportname.html']),
 
   {
-    files: ['src/**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       importPlugin.flatConfigs.recommended,
@@ -21,10 +20,9 @@ export default defineConfig([
       react.configs.flat.recommended,
       react.configs.flat['jsx-runtime'],
       reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      globals: { ...globals.browser, ...globals.node },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
@@ -34,6 +32,10 @@ export default defineConfig([
     settings: {
       react: { version: 'detect' },
       'import/resolver': {
+        alias: {
+          map: [['@', '.']],
+          extensions: ['.js', '.jsx', '.json', '.css', '.scss'],
+        },
         node: {
           extensions: ['.js', '.jsx'],
         },

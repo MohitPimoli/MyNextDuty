@@ -9,6 +9,7 @@ import com.mynextduty.core.exception.InvalidCredentialsException;
 import com.mynextduty.core.exception.KeyLoadingException;
 import com.mynextduty.core.exception.ResourceNotFoundException;
 import com.mynextduty.core.exception.TokenException;
+import com.mynextduty.core.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ import static com.mynextduty.core.utils.Constants.SOMETHING_WENT_WRONG;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler<D extends ErrorDataDto>{
+public class GlobalExceptionHandler<D extends ErrorDataDto> {
 
   @ExceptionHandler(InvalidCredentialsException.class)
   public ResponseEntity<ResponseDto<D>> handleInvalidCredentials(
@@ -134,25 +135,20 @@ public class GlobalExceptionHandler<D extends ErrorDataDto>{
     return buildResponse(INTERNAL_SERVER_ERROR.value(), SOMETHING_WENT_WRONG, request);
   }
 
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<ResponseDto<D>> handleUserNotFound(
+      UserNotFoundException ex, HttpServletRequest request) {
+    return buildResponse(UNAUTHORIZED.value(), ex.getMessage(), request);
+  }
+
   private ResponseEntity<ResponseDto<D>> buildResponse(
-      Integer status, String message, HttpServletRequest request,D data) {
+      Integer status, String message, HttpServletRequest request) {
     ResponseDto<D> responseDto =
         ErrorResponseDto.<D>builder()
             .message(message)
             .status(status)
             .path(request.getRequestURI())
-                .data(data)
             .build();
     return ResponseEntity.status(status).body(responseDto);
   }
-    private ResponseEntity<ResponseDto<D>> buildResponse(
-            Integer status, String message, HttpServletRequest request) {
-        ResponseDto<D> responseDto =
-                ErrorResponseDto.<D>builder()
-                        .message(message)
-                        .status(status)
-                        .path(request.getRequestURI())
-                        .build();
-        return ResponseEntity.status(status).body(responseDto);
-    }
 }

@@ -19,6 +19,10 @@ dist-ssr
 .idea/
 .vscode/
 
+# Next.js
+.next/
+out/
+
 # testing
 /coverage
 
@@ -49,4 +53,7 @@ reportname.html
 *.njsproj
 *.sln
 *.sw?
-.env.development
+
+# config
+.config/
+.kiro

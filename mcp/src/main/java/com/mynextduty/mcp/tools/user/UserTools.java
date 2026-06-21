@@ -1,7 +1,7 @@
 package com.mynextduty.mcp.tools.user;
 
 import com.mynextduty.mcp.dto.UserDto;
-import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +15,17 @@ public class UserTools {
             UserDto.builder().id(3L).firstName("Rahul").email("rahul@example.com").build()
     );
 
-    @Tool(description = "Get all users in the system")
+    @McpTool(
+            name = "getUser",
+            title = "Get All Users",
+            description = "Get all users in the system",
+            annotations = @McpTool.McpAnnotations(
+                    readOnlyHint = true,
+                    destructiveHint = false,
+                    idempotentHint = true,
+                    openWorldHint = false
+            )
+    )
     public List<UserDto> getUser() {
         return DUMMY_USERS;
     }

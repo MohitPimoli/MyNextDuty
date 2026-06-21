@@ -1,17 +1,19 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import commonService from "../../service/commonService";
+import { useSearchParams, useRouter } from "next/navigation";
+import commonService from "@/service/commonService";
 import "./style.scss";
-import toastService from "../../util/toastService";
-import { ROUTE_PATHS } from "../../routes/RoutePath";
-import Paper from "../../components/common/Paper";
-import Button from "../../components/common/Button";
-import RedirectCountdown from "../../components/common/Redirect/RedirectCountdown";
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "../../components/common/Button/button.constants";
+import toastService from "@/util/toastService";
+import { ROUTE_PATHS } from "@/config/RoutePath";
+import Paper from "@/components/common/Paper";
+import Button from "@/components/common/Button";
+import RedirectCountdown from "@/components/common/Redirect/RedirectCountdown";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@/components/common/Button/button.constants";
 
 const VerifyEmail = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const token = searchParams.get("token");
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState(null);
@@ -25,7 +27,7 @@ const VerifyEmail = () => {
           toastService.success(response?.data?.message);
           setStatus("success");
           setTimeout(() => {
-            navigate(ROUTE_PATHS.HOME);
+            router.push(ROUTE_PATHS.HOME);
           }, 3000);
         }
       } catch (error) {
@@ -41,7 +43,7 @@ const VerifyEmail = () => {
       toastService.error("Token not found");
       console.error("Error: No token found: ", token);
     }
-  }, [token, navigate]);
+  }, [token, router]);
 
   const resendVerification = async () => {
     try {
@@ -49,7 +51,7 @@ const VerifyEmail = () => {
       if (response?.data?.status === 200) {
         toastService.success(response?.data?.message);
         setTimeout(() => {
-          navigate(ROUTE_PATHS.LOGIN);
+          router.push(ROUTE_PATHS.LOGIN);
         }, 3000);
       }
     } catch (error) {

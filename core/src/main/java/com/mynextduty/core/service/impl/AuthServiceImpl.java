@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(
                 () -> {
                   log.warn("User not found: {}", authRequestDto.getEmail());
-                  return new UserNotFoundException("User not found.");
+                  return new UserNotFoundException("Invalid email or password");
                 });
     user.setLastAccessTime(LocalDateTime.now());
     userRepository.save(user);
