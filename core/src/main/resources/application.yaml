@@ -1,6 +1,5 @@
 server:
   port: 8080
-  timezone: ${SERVER_TIMEZONE:IST}
   servlet:
     context-path: /core
   error:
@@ -9,12 +8,20 @@ server:
 spring:
   application:
     name: core
+    version: v1.0.1
   datasource:
-    url: jdbc:postgresql://localhost:5432/mynextduty_db?currentSchema=core,public
+    url: jdbc:postgresql://localhost:5432/mynextduty_db?currentSchema=core
     username: ${DATABASE_USERNAME:}
     password: ${DATABASE_PASSWORD:}
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: MyNextDutyCoreHikariPool
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -25,14 +32,6 @@ spring:
       hibernate:
         format_sql: true
         default_schema: core
-
-  hikari:
-    pool-name: MyNextDutyCoreHikariPool
-    maximum-pool-size: 15
-    minimum-idle: 5
-    idle-timeout: 30000
-    connection-timeout: 20000
-    max-lifetime: 1800000
 
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
@@ -45,6 +44,25 @@ spring:
           auth: true
           starttls:
             enable: true
+  redis:
+    redisson:
+      config: |
+        singleServerConfig:
+          idleConnectionTimeout: 10000
+          connectTimeout: 10000
+          timeout: 3000
+          retryAttempts: 3
+          clientName: "mynextduty-core"
+          address: "redis://localhost:6379"
+          subscriptionConnectionMinimumIdleSize: 1
+          subscriptionConnectionPoolSize: 5
+          connectionMinimumIdleSize: 1
+          connectionPoolSize: 5
+          database: 0
+        threads: 5
+        username: ${REDIS_USERNAME:default}
+        password: ${REDIS_PASSWORD:}
+        nettyThreads: 5
 
 # Logging
 logging:
@@ -53,18 +71,12 @@ logging:
     org.springframework.security: DEBUG
 
 core:
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-    username: ${REDIS_USERNAME:default}
-    password: ${REDIS_PASSWORD:}
-    index: ${REDIS_INDEX:0}
-    timeout: ${REDIS_TIMEOUT:400000}
   jwt:
     secret: ${JWT_SECRET:}
     refresh:
       expiration: ${JWT_REFRESH_EXPIRATION:259200}
   baseUrl: ${CORE_BASE_URL:http://localhost:5173}
+  lensBaseUrl: ${LENS_BASE_URL:http://localhost:3000}
   email:
     verification:
      tokenExpiryMinutes: ${EMAIL_VERIFICATION_TOKEN_EXPIRY_MINUTES:15}

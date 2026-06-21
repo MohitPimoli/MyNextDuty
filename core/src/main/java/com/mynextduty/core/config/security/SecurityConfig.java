@@ -3,6 +3,7 @@ package com.mynextduty.core.config.security;
 import com.mynextduty.core.config.ratelimit.RoleBasedRateLimiterFilter;
 import com.mynextduty.core.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,6 +34,9 @@ public class SecurityConfig {
   private final CustomUserDetailsService userDetailsService;
   private final JwtAuthFilter jwtAuthFilter;
   private final RoleBasedRateLimiterFilter roleBasedRateLimiterFilter;
+
+  @Value("${core.lensBaseUrl}")
+  private String lensBaseUrl;
 
   /**
    * Configuring security filter chain.
@@ -105,7 +109,7 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     var config = new CorsConfiguration();
-    config.addAllowedOrigin("http://localhost:5173");
+    config.addAllowedOrigin(lensBaseUrl);
     config.addAllowedHeader("*");
     config.addAllowedMethod(HttpMethod.PUT);
     config.addAllowedMethod(HttpMethod.POST);

@@ -1,14 +1,15 @@
+"use client";
+
 import { useState } from "react";
 import "./style.scss";
-import Button from "../../components/common/Button";
-import InputField from "../../components/common/InputField";
-import formConfig from "../../config/formConfig";
-import { useAuth } from "../../hooks/useAuth";
-import Loader from "../../components/common/Loader";
-import { Footer } from "../../components/Hooter/Footer";
-import { BUTTON_VARIANTS } from "../../components/common/Button/button.constants";
-
-const showLaunchNotice = import.meta.env.DEV || import.meta.env.VITE_SHOW_LAUNCH_NOTICE === "true";
+import Button from "@/components/common/Button";
+import InputField from "@/components/common/InputField";
+import formConfig from "@/config/formConfig";
+import { useAuth } from "@/hooks/useAuth";
+import Loader from "@/components/common/Loader";
+import { Footer } from "@/components/Hooter/Footer";
+import { BUTTON_VARIANTS } from "@/components/common/Button/button.constants";
+import { showLaunchNotice } from "../../../util/helper";
 
 const buildInitialValues = (mode) => {
   const values = {};
@@ -78,7 +79,7 @@ export const AuthPage = () => {
   return (
     <>
       <div className="auth-page">
-        {showLaunchNotice && (
+        {showLaunchNotice() && (
           <div className="auth-launch-notice" role="status" aria-live="polite">
             <span className="auth-launch-notice__badge">Preview</span>
             <p className="auth-launch-notice__title">We&apos;re not live yet</p>

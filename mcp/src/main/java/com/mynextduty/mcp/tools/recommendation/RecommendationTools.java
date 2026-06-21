@@ -1,7 +1,8 @@
 package com.mynextduty.mcp.tools.recommendation;
 
 import com.mynextduty.mcp.dto.RecommendationDto;
-import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.mcp.annotation.McpTool;
+import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,8 +24,19 @@ public class RecommendationTools {
             )
     );
 
-    @Tool(description = "Get duty recommendations for a user by their user ID")
-    public List<RecommendationDto> getRecommendation(Long userId) {
+    @McpTool(
+            name = "getRecommendation",
+            title = "Get Duty Recommendations",
+            description = "Get duty recommendations for a user by their user ID",
+            annotations = @McpTool.McpAnnotations(
+                    readOnlyHint = true,
+                    destructiveHint = false,
+                    idempotentHint = true,
+                    openWorldHint = false
+            )
+    )
+    public List<RecommendationDto> getRecommendation(
+            @McpToolParam(description = "The unique identifier of the user") Long userId) {
         return DUMMY_RECOMMENDATIONS.getOrDefault(userId, List.of());
     }
 }

@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
-import { useGeolocation } from "../../hooks/useGeolocation";
-import Map from "../../components/Map/Map";
-import { updateUserLocation, getNearbyUsers } from "../../service/location.service";
+import { useGeolocation } from "@/hooks/useGeolocation";
+import Map from "@/components/Map/Map";
+import { updateUserLocation, getNearbyUsers } from "@/service/location.service";
 
 const MapPage = () => {
   const userId = Number(localStorage.getItem("userId"));

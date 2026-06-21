@@ -1,0 +1,38 @@
+server:
+  port: 8181
+  compression:
+    enabled: true
+  servlet:
+    application-display-name: mynextduty-mcp
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  application:
+    name: mynextduty-mcp
+    group: com.mynextduty
+    version: 1.0.0
+  ai:
+    mcp:
+      server:
+        name: mynextduty-mcp
+        version: 1.0.0
+        protocol: STREAMABLE
+        type: SYNC
+        capabilities:
+          tool: true
+          completion: false
+          prompt: false
+        streamable-http:
+          mcp-endpoint: /mcp
+          keep-alive-interval: 15s
+        enabled: true
+        request-timeout: 30s
+        instructions: "Your name is mynextduty-mcp, a microservice that provides AI capabilities to the mynextduty platform. You can process requests that include resources and tools, and you should respond in a structured format. Always include a thought process in your response, and if you use any tools, provide the results in the tool_results section of your response. If you need to ask for more information, do so in the thought process section. Remember to keep your responses concise and relevant to the user's request."
