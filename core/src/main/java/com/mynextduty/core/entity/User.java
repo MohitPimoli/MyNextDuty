@@ -1,8 +1,10 @@
 package com.mynextduty.core.entity;
 
 import com.mynextduty.core.enums.LifeStage;
+import com.mynextduty.core.converter.LifeStageConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -61,6 +63,7 @@ public class User {
   @Builder.Default
   private boolean isVerified = false;
 
+  @Convert(converter = LifeStageConverter.class)
   @Column(name = "life_stage", columnDefinition = "VARCHAR(50)")
   private LifeStage lifeStage;
 

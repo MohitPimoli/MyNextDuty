@@ -5,6 +5,7 @@ import {
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGIN_FAILURE,
   AUTH_LOGOUT,
+  AUTH_TOKEN_REFRESHED,
 } from "@/util/constants";
 
 const initialState = {
@@ -39,6 +40,12 @@ export const authReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
         isAuthenticated: false,
+      };
+
+    case AUTH_TOKEN_REFRESHED:
+      return {
+        ...state,
+        token: action.payload,
       };
 
     case AUTH_LOGOUT:

@@ -1,5 +1,5 @@
-import Loader from "@/components/common/Loader";
+import SplashScreen from "@/components/common/SplashScreen";
 
 export default function Loading() {
-  return <Loader fullscreen />;
+  return <SplashScreen />;
 }

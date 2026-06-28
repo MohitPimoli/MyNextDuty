@@ -22,7 +22,7 @@ const commonService = {
       );
     },
     refreshToken: () => {
-      return post(API_URLS.AUTH.REFRESH);
+      return get(API_URLS.AUTH.REFRESH, { withCredentials: true });
     },
     verifyEmail: (token) => {
       return get(API_URLS.AUTH.VERIFY_MAIL(token));

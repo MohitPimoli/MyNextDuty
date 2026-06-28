@@ -1,8 +1,10 @@
 package com.mynextduty.core.entity;
 
 import com.mynextduty.core.enums.LifeStage;
+import com.mynextduty.core.converter.LifeStageConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +47,7 @@ public class Goal {
   @JoinColumn(name = "category_id")
   private Category category;
 
+  @Convert(converter = LifeStageConverter.class)
   @Column(name = "target_life_stage", columnDefinition = "VARCHAR(50)")
   private LifeStage targetLifeStage;
 

@@ -2,6 +2,8 @@ package com.mynextduty.core.entity;
 
 import com.mynextduty.core.enums.LifeStage;
 import com.mynextduty.core.enums.Priority;
+import com.mynextduty.core.converter.LifeStageConverter;
+import com.mynextduty.core.converter.PriorityConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -47,9 +49,11 @@ public class Duties {
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
+  @Convert(converter = PriorityConverter.class)
   @Column(columnDefinition = "VARCHAR(50)")
   private Priority priority;
 
+  @Convert(converter = LifeStageConverter.class)
   @Column(name = "target_life_stage", columnDefinition = "VARCHAR(50)")
   private LifeStage targetLifeStage;
 

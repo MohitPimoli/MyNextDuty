@@ -1,7 +1,9 @@
 package com.mynextduty.core.entity;
 
 import com.mynextduty.core.enums.ProgressStatus;
+import com.mynextduty.core.converter.ProgressStatusConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,7 @@ public class UserGoal {
   private Goal goal;
   
   @Builder.Default
+  @Convert(converter = ProgressStatusConverter.class)
   @Column(nullable = false, columnDefinition = "VARCHAR(50)")
   private ProgressStatus status = ProgressStatus.PENDING;
   

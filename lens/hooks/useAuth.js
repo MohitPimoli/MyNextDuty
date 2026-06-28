@@ -6,7 +6,8 @@ import toastService from "../util/toastService";
 import {authLoginRequest, authLoginSuccess, authLogout} from "../redux/actions/auth.actions";
 import {navigate} from "../service/navigation.service";
 import {ROUTE_PATHS} from "../config/RoutePath";
-import {setToken} from "../util/tokenService";
+import {setToken, clearToken} from "../util/tokenService";
+import {persistor} from "../redux/store";
 import {useState} from "react";
 
 export const useAuth = () => {
@@ -32,7 +33,10 @@ export const useAuth = () => {
       );
       setToken(payload.accessToken);
       toastService.success("Login successful! Welcome back.");
-      navigate(ROUTE_PATHS.HOME);
+      // Hard redirect — ensures CSS, middleware, and layout all initialize
+      // fresh. Client-side router.push() causes Tailwind to render unstyled
+      // on the first paint after login.
+      window.location.href = ROUTE_PATHS.HOME;
       return response?.data;
     } catch (err) {
       const errorMessage = err?.response?.data?.message || "Login failed";
@@ -66,8 +70,11 @@ export const useAuth = () => {
       setLoading(true);
       await authService.logout();
     } finally {
+      clearToken();
       dispatch(authLogout());
+      await persistor.purge();
       setLoading(false);
+      window.location.href = ROUTE_PATHS.LOGIN;
     }
   };
 

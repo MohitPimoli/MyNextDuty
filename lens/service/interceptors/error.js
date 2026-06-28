@@ -1,9 +1,10 @@
 import axios from "axios";
 import { navigate } from "@/service/navigation.service";
 import { ROUTE_PATHS } from "@/config/RoutePath";
-import { persistor } from "@/redux/store";
-import API_URLS, { CORE_BASE_URL } from "@/service/api/apiUrls";
-import { setToken } from "@/util/tokenService";
+import { persistor, store } from "@/redux/store";
+import API_URLS from "@/service/api/apiUrls";
+import { setToken, clearToken } from "@/util/tokenService";
+import { authTokenRefreshed, authLogout } from "@/redux/actions/auth.actions";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -23,7 +24,18 @@ export const errorInterceptor = async (error, api) => {
   }
 
   const originalRequest = config;
-  if (response.status === 401 && response.data?.errorCode === 1001 && !originalRequest._retry) {
+
+  // 4003 — token is invalid/tampered. Cannot refresh. Force full logout immediately.
+  if (response.status === 401 && response.data?.errorCode === 4003) {
+    clearToken();
+    store.dispatch(authLogout());
+    await persistor.purge();
+    navigate(ROUTE_PATHS.LOGIN);
+    return Promise.reject(error);
+  }
+
+  // 4001 — token expired / missing / blacklisted. Attempt silent refresh.
+  if (response.status === 401 && response.data?.errorCode === 4001 && !originalRequest._retry) {
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -37,16 +49,15 @@ export const errorInterceptor = async (error, api) => {
     isRefreshing = true;
 
     try {
-      const refreshResponse = await axios.post(
-        `${CORE_BASE_URL}${API_URLS.AUTH.REFRESH}`,
-        {},
-        { withCredentials: true }
-      );
+      const refreshResponse = await axios.get(`${API_URLS.AUTH.REFRESH}`, {
+        withCredentials: true,
+      });
 
-      const { accessToken } = refreshResponse.data;
+      const { accessToken } = refreshResponse.data?.data ?? refreshResponse.data;
 
-      setToken(accessToken);
-      api.defaults.headers.Authorization = `Bearer ${accessToken}`;
+      setToken(accessToken);                                   // cookie
+      store.dispatch(authTokenRefreshed(accessToken));         // redux
+      api.defaults.headers.Authorization = `Bearer ${accessToken}`; // axios default
 
       processQueue(null, accessToken);
 
@@ -54,7 +65,9 @@ export const errorInterceptor = async (error, api) => {
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);
-      persistor.purge();
+      clearToken();                          // cookie
+      store.dispatch(authLogout());          // redux
+      await persistor.purge();              // localStorage
       navigate(ROUTE_PATHS.LOGIN);
       return Promise.reject(refreshError);
     } finally {
@@ -62,11 +75,8 @@ export const errorInterceptor = async (error, api) => {
     }
   }
 
-  // 🚦 Global status handling
+  // Any other non-401 status codes
   switch (response.status) {
-    case 401:
-      navigate(ROUTE_PATHS.LOGIN);
-      break;
     case 403:
       navigate(ROUTE_PATHS.FORBIDDEN);
       break;

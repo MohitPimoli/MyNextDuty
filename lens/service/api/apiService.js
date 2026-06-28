@@ -77,6 +77,7 @@ class ApiService {
       }
       return response;
     } catch (error) {
+      console.error("GET request error:", error);
       throw error;
     }
   }
@@ -114,6 +115,7 @@ class ApiService {
       }
       return response;
     } catch (error) {
+      console.error("POST request error:", error);
       throw error;
     }
   }
@@ -150,6 +152,7 @@ class ApiService {
       }
       return response;
     } catch (error) {
+      console.error("PUT request error:", error);
       throw error;
     }
   }
@@ -186,6 +189,7 @@ class ApiService {
       }
       return response;
     } catch (error) {
+      console.error("PATCH request error:", error);
       throw error;
     }
   }
@@ -228,6 +232,7 @@ class ApiService {
       }
       return response;
     } catch (error) {
+      console.error("DELETE request error:", error);
       throw error;
     }
   }
@@ -243,15 +248,15 @@ class ApiService {
   async upload(url, formData, options = {}) {
     const { onUploadProgress, headers = {} } = options;
     try {
-      const response = await this.api.post(url, formData, {
+      return await this.api.post(url, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           ...headers,
         },
         onUploadProgress,
       });
-      return response;
     } catch (error) {
+      console.error("UPLOAD error:", error);
       throw error;
     }
   }
@@ -266,12 +271,12 @@ class ApiService {
   async download(url, options = {}) {
     const { params = {}, responseType = "blob" } = options;
     try {
-      const response = await this.api.get(url, {
+      return await this.api.get(url, {
         params,
         responseType,
       });
-      return response;
     } catch (error) {
+      console.error("DOWNLOAD error:", error);
       throw error;
     }
   }
