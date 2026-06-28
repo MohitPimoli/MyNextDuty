@@ -8,7 +8,6 @@ import com.mynextduty.core.dto.auth.AuthResponseDto;
 import com.mynextduty.core.dto.auth.CustomUserDetails;
 import com.mynextduty.core.entity.User;
 import com.mynextduty.core.exception.GenericApplicationException;
-import com.mynextduty.core.exception.InvalidCredentialsException;
 import com.mynextduty.core.exception.KeyLoadingException;
 import com.mynextduty.core.exception.TokenException;
 import com.mynextduty.core.exception.UserNotFoundException;
@@ -29,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,15 +51,12 @@ public class AuthServiceImpl implements AuthService {
   public String publicKey() {
     try (InputStream is = getClass().getResourceAsStream(PUBLIC_KEY_PATH)) {
       if (is == null) {
-        log.error("Public key file not found at {}", PUBLIC_KEY_PATH);
         throw new KeyLoadingException("Public key file not found in " + PUBLIC_KEY_PATH);
       }
       return new String(is.readAllBytes(), StandardCharsets.UTF_8);
     } catch (IOException e) {
-      log.error("IO error while reading the public key file", e);
       throw new KeyLoadingException("Failed to read public key", e);
     } catch (Exception e) {
-      log.error("Unexpected error while loading public key", e);
       throw new GenericApplicationException(
           "Unexpected error loading public key", e.getCause(), 500);
     }
@@ -73,14 +68,9 @@ public class AuthServiceImpl implements AuthService {
       AuthRequestDto authRequestDto, HttpServletResponse httpServletResponse) {
     CustomUserDetails customUserDetails =
         (CustomUserDetails) customUserDetailsService.loadUserByUsername(authRequestDto.getEmail());
-    try {
       String decryptedPassword = passDecryptor.decryptPassword(authRequestDto.getPassword());
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(authRequestDto.getEmail(), decryptedPassword));
-    } catch (BadCredentialsException e) {
-      log.warn("Bad credentials for user '{}'", authRequestDto.getEmail());
-      throw new InvalidCredentialsException("Invalid credentials.");
-    }
     User user =
         userRepository
             .findByEmail(authRequestDto.getEmail())
@@ -93,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     userRepository.save(user);
     String token = jwtUtil.generateToken(customUserDetails);
     String refreshToken = jwtUtil.generateRefreshToken(customUserDetails);
-    log.debug("User '{}' logged in successfully", authRequestDto.getEmail());
+    setRefreshTokenCookie(httpServletResponse, refreshToken);
     return AuthResponseDto.builder()
         .id(user.getId().toString())
         .email(user.getEmail())
@@ -115,13 +105,11 @@ public class AuthServiceImpl implements AuthService {
       }
     }
     if (oldRefreshToken == null) {
-      log.debug("Missing refresh token in cookies");
       throw new TokenException("Invalid refresh token");
     }
     try {
       String email = jwtUtil.extractUsername(oldRefreshToken);
       if (jwtUtil.isTokenExpired(oldRefreshToken)) {
-        log.debug("Refresh token expired for user: {}", email);
         throw new ExpiredJwtException(null, null, "Refresh token expired");
       }
       blacklistToken.blackListRefreshToken(oldRefreshToken);

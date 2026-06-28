@@ -2,6 +2,7 @@ package com.mynextduty.core.service;
 
 import com.mynextduty.core.dto.GlobalMessageDto;
 import com.mynextduty.core.dto.user.UserRegisterRequestDto;
+import com.mynextduty.core.dto.user.UserResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserAccountService {
@@ -11,4 +12,6 @@ public interface UserAccountService {
   GlobalMessageDto verifyEmail();
 
   GlobalMessageDto verify();
+
+  UserResponseDto getUserProfile();
 }

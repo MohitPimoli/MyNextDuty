@@ -13,8 +13,10 @@ export const getToken = () => {
 export const setToken = (accessToken) => {
   try {
     Cookies.set(ACCESS_TOKEN_KEY, accessToken, {
-      secure: true,
-      sameSite: "Strict",
+      path: "/",
+      sameSite: "Lax",
+      // Only set secure in production (https); localhost is http
+      secure: process.env.NODE_ENV === "production",
     });
   } catch (e) {
     console.error("Error setting token:", e);
@@ -22,5 +24,5 @@ export const setToken = (accessToken) => {
 };
 
 export const clearToken = () => {
-  Cookies.remove(ACCESS_TOKEN_KEY);
+  Cookies.remove(ACCESS_TOKEN_KEY, { path: "/" });
 };

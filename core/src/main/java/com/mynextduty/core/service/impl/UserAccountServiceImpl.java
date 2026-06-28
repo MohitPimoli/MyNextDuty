@@ -3,6 +3,7 @@ package com.mynextduty.core.service.impl;
 import com.mynextduty.core.config.security.PassDecryptor;
 import com.mynextduty.core.dto.GlobalMessageDto;
 import com.mynextduty.core.dto.user.UserRegisterRequestDto;
+import com.mynextduty.core.dto.user.UserResponseDto;
 import com.mynextduty.core.entity.Role;
 import com.mynextduty.core.entity.User;
 import com.mynextduty.core.exception.GenericApplicationException;
@@ -68,5 +69,21 @@ public class UserAccountServiceImpl implements UserAccountService {
   public GlobalMessageDto verify() {
     User user = currentUserService.getCurrentUser();
     return verificationService.resendVerification(user);
+  }
+
+  @Override
+  public UserResponseDto getUserProfile() {
+    User user = currentUserService.getCurrentUser();
+    return UserResponseDto.builder()
+        .id(user.getId())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .lifeStage(user.getLifeStage())
+        .currentOccupation(user.getCurrentOccupation())
+        .educationLevel(user.getEducationLevel() != null
+            ? user.getEducationLevel().getLevelName() : null)
+        .isVerified(user.isVerified())
+        .build();
   }
 }

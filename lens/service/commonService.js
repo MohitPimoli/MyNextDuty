@@ -34,15 +34,11 @@ const commonService = {
 
   // USER ENDPOINTS
   USER: {
-    getProfile: (userId) => {
-      return get(`/users/${userId}/profile`, {
+    getProfile: () =>
+      get(API_URLS.USER.PROFILE, {
         enableCache: true,
-        cache: {
-          ttl: 300000, // 5 minutes
-          key: `user_profile_${userId}`,
-        },
-      });
-    },
+        cache: { ttl: 300000, key: 'user_profile' },
+      }),
 
     updateProfile: (userId, payload) => {
       return put(`/users/${userId}/profile`, payload, {
@@ -81,6 +77,30 @@ const commonService = {
         },
       });
     },
+  },
+
+  // RECOMMENDATION ENDPOINTS
+  RECOMMENDATION: {
+    getPersonalized: () =>
+      get(API_URLS.RECOMMENDATION.PERSONALIZED, {
+        enableCache: true,
+        cache: { ttl: 60000, key: 'recommendations_personalized' },
+      }),
+    getByLifeStage: () =>
+      get(API_URLS.RECOMMENDATION.BY_LIFE_STAGE, {
+        enableCache: true,
+        cache: { ttl: 60000, key: 'recommendations_by_life_stage' },
+      }),
+    getByInterests: () =>
+      get(API_URLS.RECOMMENDATION.BY_INTERESTS, {
+        enableCache: true,
+        cache: { ttl: 60000, key: 'recommendations_by_interests' },
+      }),
+    getCritical: () =>
+      get(API_URLS.RECOMMENDATION.CRITICAL, {
+        enableCache: true,
+        cache: { ttl: 60000, key: 'recommendations_critical' },
+      }),
   },
 
   // LOCATION ENDPOINTS

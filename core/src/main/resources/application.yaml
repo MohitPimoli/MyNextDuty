@@ -27,7 +27,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -80,3 +80,11 @@ core:
   email:
     verification:
      tokenExpiryMinutes: ${EMAIL_VERIFICATION_TOKEN_EXPIRY_MINUTES:15}
+  rate-limit:
+    # Bucket capacity per role (max requests allowed before throttling)
+    default-limit: 100
+    admin-limit: 500
+    customer-limit: 200
+    # Token refill: refill-tokens are added every refill-duration seconds
+    refill-tokens: 50
+    refill-duration: 60

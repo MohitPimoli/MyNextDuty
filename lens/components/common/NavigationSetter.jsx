@@ -12,6 +12,10 @@ import { setRouter } from "@/service/navigation.service";
 const NavigationSetter = () => {
   const router = useRouter();
 
+  // Store immediately on render (not just in useEffect) so the router
+  // is available synchronously before any effect fires.
+  setRouter(router);
+
   useEffect(() => {
     setRouter(router);
   }, [router]);

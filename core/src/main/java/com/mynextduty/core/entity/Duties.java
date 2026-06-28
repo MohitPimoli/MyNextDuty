@@ -4,9 +4,8 @@ import com.mynextduty.core.enums.LifeStage;
 import com.mynextduty.core.enums.Priority;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,10 +47,10 @@ public class Duties {
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
-  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "VARCHAR(50)")
   private Priority priority;
 
-  @Enumerated(EnumType.STRING)
+  @Column(name = "target_life_stage", columnDefinition = "VARCHAR(50)")
   private LifeStage targetLifeStage;
 
   private Integer minAge;

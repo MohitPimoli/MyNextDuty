@@ -12,6 +12,13 @@ const API_URLS = {
   },
   USER: {
     REVERIFY: `${CORE_BASE_URL}/user/resend-verification`,
+    PROFILE:  `${CORE_BASE_URL}/user/profile`,
+  },
+  RECOMMENDATION: {
+    PERSONALIZED:  `${CORE_BASE_URL}/recommendations/personalized`,
+    BY_LIFE_STAGE: `${CORE_BASE_URL}/recommendations/by-life-stage`,
+    BY_INTERESTS:  `${CORE_BASE_URL}/recommendations/by-interests`,
+    CRITICAL:      `${CORE_BASE_URL}/recommendations/critical`,
   },
   LOCATION: {
     USER: `${CORE_BASE_URL}/location/user`,

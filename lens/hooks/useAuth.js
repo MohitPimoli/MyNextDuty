@@ -1,10 +1,13 @@
 "use client";
 
-import { useDispatch, useSelector } from "react-redux";
-import { authService } from "../service/auth.service";
+import {useDispatch, useSelector} from "react-redux";
+import {authService} from "../service/auth.service";
 import toastService from "../util/toastService";
-import { authLoginRequest, authLoginSuccess, authLogout } from "../redux/actions/auth.actions";
-import { useState } from "react";
+import {authLoginRequest, authLoginSuccess, authLogout} from "../redux/actions/auth.actions";
+import {navigate} from "../service/navigation.service";
+import {ROUTE_PATHS} from "../config/RoutePath";
+import {setToken} from "../util/tokenService";
+import {useState} from "react";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -27,7 +30,9 @@ export const useAuth = () => {
           token: payload.accessToken,
         })
       );
+      setToken(payload.accessToken);
       toastService.success("Login successful! Welcome back.");
+      navigate(ROUTE_PATHS.HOME);
       return response?.data;
     } catch (err) {
       const errorMessage = err?.response?.data?.message || "Login failed";

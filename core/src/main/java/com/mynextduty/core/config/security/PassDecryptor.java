@@ -35,7 +35,6 @@ public class PassDecryptor {
       KeyFactory keyFactory = KeyFactory.getInstance("RSA");
       return keyFactory.generatePrivate(spec);
     } catch (Exception e) {
-      log.error("Failed to load private key", e);
       throw new KeyLoadingException("Failed to load private key", e);
     }
   }

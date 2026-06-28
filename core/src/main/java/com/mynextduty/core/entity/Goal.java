@@ -4,8 +4,6 @@ import com.mynextduty.core.enums.LifeStage;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,7 +45,7 @@ public class Goal {
   @JoinColumn(name = "category_id")
   private Category category;
 
-  @Enumerated(EnumType.STRING)
+  @Column(name = "target_life_stage", columnDefinition = "VARCHAR(50)")
   private LifeStage targetLifeStage;
 
   private String timeframe; // "6 months", "2 years", etc.

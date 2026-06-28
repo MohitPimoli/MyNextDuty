@@ -3,8 +3,6 @@ package com.mynextduty.core.entity;
 import com.mynextduty.core.enums.ProgressStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,8 +39,7 @@ public class UserGoal {
   private Goal goal;
   
   @Builder.Default
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "VARCHAR(50)")
   private ProgressStatus status = ProgressStatus.PENDING;
   
   private LocalDateTime targetDate;

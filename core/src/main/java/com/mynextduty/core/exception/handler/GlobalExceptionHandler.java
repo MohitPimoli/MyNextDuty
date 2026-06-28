@@ -12,13 +12,13 @@ import com.mynextduty.core.exception.TokenException;
 import com.mynextduty.core.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -35,13 +35,11 @@ import static com.mynextduty.core.enums.HttpStatus.UNAUTHORIZED;
 import static com.mynextduty.core.utils.Constants.SOMETHING_WENT_WRONG;
 
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler<D extends ErrorDataDto> {
 
-  @ExceptionHandler(InvalidCredentialsException.class)
-  public ResponseEntity<ResponseDto<D>> handleInvalidCredentials(
-      InvalidCredentialsException ex, HttpServletRequest request) {
-    return buildResponse(UNAUTHORIZED.value(), ex.getMessage(), request);
+  @ExceptionHandler({InvalidCredentialsException.class, BadCredentialsException.class})
+  public ResponseEntity<ResponseDto<D>> handleInvalidCredentials(HttpServletRequest request) {
+    return buildResponse(UNAUTHORIZED.value(), "Invalid credentials provided", request);
   }
 
   @ExceptionHandler(TokenException.class)
