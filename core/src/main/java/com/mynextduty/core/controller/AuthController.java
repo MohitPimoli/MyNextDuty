@@ -53,16 +53,12 @@ public class AuthController {
     return new SuccessResponseDto<>(authService.logout(request));
   }
 
-  /**
-   * FLOW C: Verify email using token from email link Public endpoint - no authentication required
-   */
   @GetMapping("/verify-email")
   public ResponseDto<GlobalMessageDto> verifyEmail(@RequestParam String token) {
     GlobalMessageDto result = verificationService.verifyEmail(token);
     return new SuccessResponseDto<>(result);
   }
 
-  /** FLOW B: Resend verification email for logged-in user Requires authentication */
   @PostMapping("/resend-verification")
   public ResponseDto<GlobalMessageDto> resendVerification() {
     User currentUser = currentUserService.getCurrentUser();

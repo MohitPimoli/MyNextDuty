@@ -40,12 +40,17 @@ const commonService = {
         cache: { ttl: 300000, key: 'user_profile' },
       }),
 
-    updateProfile: (userId, payload) => {
-      return put(`/users/${userId}/profile`, payload, {
+    updateProfile: (payload) =>
+      put(API_URLS.USER.UPDATE_PROFILE, payload, {
         invalidateCache: true,
-        cacheKeysToInvalidate: [`user_profile_${userId}`, `user_${userId}`],
-      });
-    },
+        cacheKeysToInvalidate: ['user_profile'],
+      }),
+
+    getEducationLevels: () =>
+      get(API_URLS.USER.EDUCATION_LEVELS, {
+        enableCache: true,
+        cache: { ttl: 600000, key: 'education_levels' },
+      }),
 
     getById: (userId) => {
       return get(`/users/${userId}`, {

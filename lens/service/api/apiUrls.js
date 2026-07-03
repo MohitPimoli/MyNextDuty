@@ -11,8 +11,10 @@ const API_URLS = {
     },
   },
   USER: {
-    REVERIFY: `${CORE_BASE_URL}/user/resend-verification`,
-    PROFILE:  `${CORE_BASE_URL}/user/profile`,
+    REVERIFY:       `${CORE_BASE_URL}/user/resend-verification`,
+    PROFILE:        `${CORE_BASE_URL}/user/profile`,
+    UPDATE_PROFILE: `${CORE_BASE_URL}/user/profile`,
+    EDUCATION_LEVELS: `${CORE_BASE_URL}/user/education-levels`,
   },
   RECOMMENDATION: {
     PERSONALIZED:  `${CORE_BASE_URL}/recommendations/personalized`,

@@ -39,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       jwtUtil.writeCustomErrorResponse(
           response,
           HttpServletResponse.SC_UNAUTHORIZED,
-          1001,
+          4001,
           "InvalidAuthorizationHeader",
           "Missing or invalid Authorization header.");
       return;
@@ -51,7 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         jwtUtil.writeCustomErrorResponse(
             response,
             HttpServletResponse.SC_UNAUTHORIZED,
-            1001,
+            4001,
             "BlacklistedToken",
             "Token is blacklisted.");
         return;
@@ -77,7 +77,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       jwtUtil.writeCustomErrorResponse(
           response,
           HttpServletResponse.SC_UNAUTHORIZED,
-          1001,
+          4001,
           "AccessTokenExpired",
           "Access token has expired");
       return;
