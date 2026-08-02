@@ -12,7 +12,7 @@ import { useState } from "react";
 export const useAuth = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const { error, user, isAuthenticated } = useSelector((state) => state.auth);
+  const { error, email, firstName, isAuthenticated } = useSelector((state) => state.auth);
   const login = async (values) => {
     dispatch(authLoginRequest());
     try {
@@ -87,7 +87,8 @@ export const useAuth = () => {
     // derived state
     loading,
     error,
-    user,
+    email,
+    firstName,
     isAuthenticated,
   };
 };

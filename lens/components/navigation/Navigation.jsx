@@ -22,7 +22,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/Sheet";
  * - Theme toggle invokes the ThemeProvider toggle (4.4)
  */
 const Navigation = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout, firstName } = useAuth();
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -38,7 +38,7 @@ const Navigation = () => {
 
   const closeDrawer = () => setDrawerOpen(false);
   const isActive = (href) => pathname === href;
-  const initial = user ? user[0]?.toUpperCase() : "?";
+  const initial = firstName ? firstName[0]?.toUpperCase() : "?";
 
   // Close profile menu on outside click
   useEffect(() => {
