@@ -5,7 +5,7 @@ const formConfig = {
     fields: [
       {
         name: "email",
-        label: "Email Address",
+        label: "Email",
         type: "email",
         placeholder: "Enter your email",
         required: true,
@@ -27,21 +27,13 @@ const formConfig = {
     fields: [
       {
         name: "email",
-        label: "Email Address",
+        label: "Email",
         type: "email",
         placeholder: "Enter your email",
         required: true,
         validation: (value) =>
           /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value) ||
           "Please enter a valid email address.",
-      },
-      {
-        name: "username",
-        label: "Username",
-        type: "text",
-        placeholder: "Choose a username",
-        required: true,
-        validation: (value) => value.length >= 3 || "Username must be at least 3 characters long.",
       },
       {
         name: "firstName",

@@ -9,23 +9,23 @@ import { THEME_STORAGE_KEY } from "@/util/theme";
  *
  * Wraps `next-themes` to toggle the `.dark` class on the `<html>` element so
  * every rendered page and component receives the active theme's tokens
- * (Req 2.6). The provider supports the two selectable themes (Req 2.1),
+ * . The provider supports the two selectable themes ,
  * persists the selection under the `"theme"` storage key so it reapplies on
- * later visits (Req 2.3), and defaults to the OS color-scheme preference on
- * first load via `defaultTheme="system"` + `enableSystem` (Req 2.5).
+ * later visits , and defaults to the OS color-scheme preference on
+ * first load via `defaultTheme="system"` + `enableSystem` .
  *
  * @param {{ children: React.ReactNode }} props
  * @returns {JSX.Element}
  */
 const ThemeProvider = ({ children }) => (
-    <NextThemesProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        storageKey={THEME_STORAGE_KEY}
-    >
-        {children}
-    </NextThemesProvider>
+  <NextThemesProvider
+    attribute="class"
+    defaultTheme="system"
+    enableSystem
+    storageKey={THEME_STORAGE_KEY}
+  >
+    {children}
+  </NextThemesProvider>
 );
 
 export default ThemeProvider;

@@ -24,13 +24,13 @@
  * Requirements: 11.2, 11.3, 11.6
  */
 
-/** The number of days the availability calendar covers (Req 11.2). */
+/** The number of days the availability calendar covers. */
 export const CALENDAR_DAYS = 30;
 
-/** The maximum number of reviews shown on a single page (Req 11.3). */
+/** The maximum number of reviews shown on a single page. */
 export const REVIEWS_PER_PAGE = 10;
 
-/** The maximum number of related mentors shown (Req 11.6). */
+/** The maximum number of related mentors shown. */
 export const MAX_RELATED_MENTORS = 6;
 
 /** Milliseconds in a single day, used to advance the calendar day-by-day. */
@@ -47,14 +47,14 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
  * @returns {Date | null} a valid `Date`, or `null` when it cannot be parsed
  */
 const toDate = (value) => {
-    if (value instanceof Date) {
-        return Number.isNaN(value.getTime()) ? null : value;
-    }
-    if (typeof value === "string" || typeof value === "number") {
-        const parsed = new Date(value);
-        return Number.isNaN(parsed.getTime()) ? null : parsed;
-    }
-    return null;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+  return null;
 };
 
 /**
@@ -67,14 +67,14 @@ const toDate = (value) => {
  * @returns {string} the day key in `YYYY-MM-DD` form
  */
 const toDayKey = (date) => {
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
 /**
- * Generate one calendar entry for each of the next 30 days from `from` (Req 11.2).
+ * Generate one calendar entry for each of the next 30 days from `from`.
  *
  * Starting from the calendar day of `from` (inclusive), this produces exactly
  * {@link CALENDAR_DAYS} entries, one per consecutive day. A day is `available`
@@ -92,37 +92,37 @@ const toDayKey = (date) => {
  * @returns {CalendarDay[]} exactly 30 calendar-day entries in ascending order
  */
 export const generateCalendarDays = (slots, from) => {
-    const start = toDate(from) ?? new Date();
+  const start = toDate(from) ?? new Date();
 
-    const availableDays = new Set();
-    if (Array.isArray(slots)) {
-        for (const slot of slots) {
-            if (!slot || slot.available !== true) {
-                continue;
-            }
-            const slotDate = toDate(slot.date);
-            if (slotDate) {
-                availableDays.add(toDayKey(slotDate));
-            }
-        }
+  const availableDays = new Set();
+  if (Array.isArray(slots)) {
+    for (const slot of slots) {
+      if (!slot || slot.available !== true) {
+        continue;
+      }
+      const slotDate = toDate(slot.date);
+      if (slotDate) {
+        availableDays.add(toDayKey(slotDate));
+      }
     }
+  }
 
-    const days = [];
-    for (let offset = 0; offset < CALENDAR_DAYS; offset += 1) {
-        const dayDate = new Date(start.getTime() + offset * MS_PER_DAY);
-        const key = toDayKey(dayDate);
-        const available = availableDays.has(key);
-        days.push({
-            date: key,
-            available,
-            unavailable: !available,
-        });
-    }
-    return days;
+  const days = [];
+  for (let offset = 0; offset < CALENDAR_DAYS; offset += 1) {
+    const dayDate = new Date(start.getTime() + offset * MS_PER_DAY);
+    const key = toDayKey(dayDate);
+    const available = availableDays.has(key);
+    days.push({
+      date: key,
+      available,
+      unavailable: !available,
+    });
+  }
+  return days;
 };
 
 /**
- * Return the reviews for a single page, at most 10 per page (Req 11.3).
+ * Return the reviews for a single page, at most 10 per page .
  *
  * Pages are 1-indexed: page 1 returns the first {@link REVIEWS_PER_PAGE}
  * reviews, page 2 the next batch, and so on. A missing, non-numeric, or
@@ -135,20 +135,17 @@ export const generateCalendarDays = (slots, from) => {
  * @returns {Review[]} at most 10 reviews for the requested page
  */
 export const paginateReviews = (reviews, page) => {
-    if (!Array.isArray(reviews)) {
-        return [];
-    }
-    const requested =
-        typeof page === "number" && Number.isFinite(page)
-            ? Math.floor(page)
-            : 1;
-    const safePage = requested >= 1 ? requested : 1;
-    const start = (safePage - 1) * REVIEWS_PER_PAGE;
-    return reviews.slice(start, start + REVIEWS_PER_PAGE);
+  if (!Array.isArray(reviews)) {
+    return [];
+  }
+  const requested = typeof page === "number" && Number.isFinite(page) ? Math.floor(page) : 1;
+  const safePage = requested >= 1 ? requested : 1;
+  const start = (safePage - 1) * REVIEWS_PER_PAGE;
+  return reviews.slice(start, start + REVIEWS_PER_PAGE);
 };
 
 /**
- * Return at most six related mentors, preserving order (Req 11.6).
+ * Return at most six related mentors, preserving order.
  *
  * The related-mentors region shows between 0 and 6 mentors, so any longer list
  * is capped at {@link MAX_RELATED_MENTORS}. Non-array input yields an empty
@@ -159,8 +156,8 @@ export const paginateReviews = (reviews, page) => {
  * @returns {T[]} at most six related mentors
  */
 export const capRelated = (list) => {
-    if (!Array.isArray(list)) {
-        return [];
-    }
-    return list.slice(0, MAX_RELATED_MENTORS);
+  if (!Array.isArray(list)) {
+    return [];
+  }
+  return list.slice(0, MAX_RELATED_MENTORS);
 };

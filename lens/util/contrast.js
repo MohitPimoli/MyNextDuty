@@ -8,11 +8,11 @@
  *
  * WCAG 2.1 success criteria encoded here:
  *   - Focus indicators must reach at least 3:1 against the adjacent
- *     background (Req 17.3).
+ *     background.
  *   - Text must reach at least 4.5:1 for normal text and at least 3:1 for
- *     large text (Req 17.4).
+ *     large text.
  *   - UI components and graphical objects must reach at least 3:1 against
- *     adjacent colors (Req 17.5).
+ *     adjacent colors.
  *
  * @typedef {"normalText" | "largeText" | "ui"} ContrastKind
  *
@@ -21,21 +21,19 @@
  * @property {number} g - green channel, integer in [0, 255]
  * @property {number} b - blue channel, integer in [0, 255]
  *
- * Requirements: 17.3, 17.4, 17.5
  */
 
 /**
  * Minimum required contrast ratio per contrast kind (WCAG 2.1 AA).
  *
- * `normalText` requires 4.5:1 (Req 17.4); `largeText` and `ui` require 3:1
- * (Req 17.4, 17.5, and the focus-indicator case of Req 17.3).
+ * `normalText` requires 4.5:1; `largeText` and `ui` require 3:1
  *
  * @type {Readonly<Record<ContrastKind, number>>}
  */
 export const CONTRAST_THRESHOLDS = Object.freeze({
-    normalText: 4.5,
-    largeText: 3,
-    ui: 3,
+  normalText: 4.5,
+  largeText: 3,
+  ui: 3,
 });
 
 /**
@@ -50,30 +48,28 @@ export const CONTRAST_THRESHOLDS = Object.freeze({
  * @throws {Error} if the input is not a valid `#RGB` or `#RRGGBB` string
  */
 export function parseHexColor(hex) {
-    if (typeof hex !== "string") {
-        throw new Error(`Invalid hex color: expected a string, got ${typeof hex}.`);
-    }
+  if (typeof hex !== "string") {
+    throw new Error(`Invalid hex color: expected a string, got ${typeof hex}.`);
+  }
 
-    const match = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(hex.trim());
-    if (!match) {
-        throw new Error(
-            `Invalid hex color "${hex}". Expected "#RGB" or "#RRGGBB".`,
-        );
-    }
+  const match = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(hex.trim());
+  if (!match) {
+    throw new Error(`Invalid hex color "${hex}". Expected "#RGB" or "#RRGGBB".`);
+  }
 
-    let digits = match[1];
-    if (digits.length === 3) {
-        digits = digits
-            .split("")
-            .map((c) => c + c)
-            .join("");
-    }
+  let digits = match[1];
+  if (digits.length === 3) {
+    digits = digits
+      .split("")
+      .map((c) => c + c)
+      .join("");
+  }
 
-    return {
-        r: parseInt(digits.slice(0, 2), 16),
-        g: parseInt(digits.slice(2, 4), 16),
-        b: parseInt(digits.slice(4, 6), 16),
-    };
+  return {
+    r: parseInt(digits.slice(0, 2), 16),
+    g: parseInt(digits.slice(2, 4), 16),
+    b: parseInt(digits.slice(4, 6), 16),
+  };
 }
 
 /**
@@ -83,8 +79,8 @@ export function parseHexColor(hex) {
  * @returns {number} the linearized channel value in [0, 1]
  */
 function linearizeChannel(channel) {
-    const c = channel / 255;
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  const c = channel / 255;
+  return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
 }
 
 /**
@@ -98,12 +94,8 @@ function linearizeChannel(channel) {
  * @throws {Error} if the input is not a valid hex color
  */
 export function relativeLuminance(hex) {
-    const { r, g, b } = parseHexColor(hex);
-    return (
-        0.2126 * linearizeChannel(r) +
-        0.7152 * linearizeChannel(g) +
-        0.0722 * linearizeChannel(b)
-    );
+  const { r, g, b } = parseHexColor(hex);
+  return 0.2126 * linearizeChannel(r) + 0.7152 * linearizeChannel(g) + 0.0722 * linearizeChannel(b);
 }
 
 /**
@@ -118,11 +110,11 @@ export function relativeLuminance(hex) {
  * @throws {Error} if either input is not a valid hex color
  */
 export function contrastRatio(hex1, hex2) {
-    const l1 = relativeLuminance(hex1);
-    const l2 = relativeLuminance(hex2);
-    const lighter = Math.max(l1, l2);
-    const darker = Math.min(l1, l2);
-    return (lighter + 0.05) / (darker + 0.05);
+  const l1 = relativeLuminance(hex1);
+  const l2 = relativeLuminance(hex2);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 /**
@@ -133,11 +125,11 @@ export function contrastRatio(hex1, hex2) {
  * @throws {Error} if the kind is not a recognized contrast kind
  */
 export function contrastThreshold(kind) {
-    if (!Object.prototype.hasOwnProperty.call(CONTRAST_THRESHOLDS, kind)) {
-        const known = Object.keys(CONTRAST_THRESHOLDS).join(", ");
-        throw new Error(`Unknown contrast kind "${kind}". Expected one of: ${known}.`);
-    }
-    return CONTRAST_THRESHOLDS[kind];
+  if (!Object.prototype.hasOwnProperty.call(CONTRAST_THRESHOLDS, kind)) {
+    const known = Object.keys(CONTRAST_THRESHOLDS).join(", ");
+    throw new Error(`Unknown contrast kind "${kind}". Expected one of: ${known}.`);
+  }
+  return CONTRAST_THRESHOLDS[kind];
 }
 
 /**
@@ -151,5 +143,5 @@ export function contrastThreshold(kind) {
  * @throws {Error} if either color is invalid or the kind is unrecognized
  */
 export function meetsContrast(hex1, hex2, kind) {
-    return contrastRatio(hex1, hex2) >= contrastThreshold(kind);
+  return contrastRatio(hex1, hex2) >= contrastThreshold(kind);
 }

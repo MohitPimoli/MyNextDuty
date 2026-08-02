@@ -12,7 +12,7 @@
 const ELLIPSIS = "\u2026";
 
 /**
- * Truncate text to at most `max` characters (Req 9.1).
+ * Truncate text to at most `max` characters.
  *
  * When the text is longer than `max`, it is cut and an ellipsis is appended so
  * that the returned string never exceeds `max` characters (the ellipsis
@@ -24,24 +24,24 @@ const ELLIPSIS = "\u2026";
  * @returns {string} the truncated text, never longer than `max`
  */
 export const truncate = (text, max) => {
-    if (typeof text !== "string") {
-        return "";
-    }
-    if (typeof max !== "number" || !Number.isFinite(max) || max <= 0) {
-        return "";
-    }
+  if (typeof text !== "string") {
+    return "";
+  }
+  if (typeof max !== "number" || !Number.isFinite(max) || max <= 0) {
+    return "";
+  }
 
-    const cap = Math.floor(max);
-    if (text.length <= cap) {
-        return text;
-    }
+  const cap = Math.floor(max);
+  if (text.length <= cap) {
+    return text;
+  }
 
-    // Reserve one character for the ellipsis; if the cap is a single character
-    // there is no room for content, so return just the ellipsis.
-    if (cap === 1) {
-        return ELLIPSIS;
-    }
-    return text.slice(0, cap - 1).trimEnd() + ELLIPSIS;
+  // Reserve one character for the ellipsis; if the cap is a single character
+  // there is no room for content, so return just the ellipsis.
+  if (cap === 1) {
+    return ELLIPSIS;
+  }
+  return text.slice(0, cap - 1).trimEnd() + ELLIPSIS;
 };
 
 /** Time unit thresholds (in seconds) used for relative-time formatting. */
@@ -63,7 +63,7 @@ const ago = (value, unit) => `${value} ${unit}${value === 1 ? "" : "s"} ago`;
 
 /**
  * Express the time elapsed since `fromISO` as a relative duration string
- * (for example "2 hours ago") (Req 9.1, 11.1).
+ * (for example "2 hours ago").
  *
  * The elapsed time is measured from `fromISO` up to `now`. Times within the
  * last minute render as "just now". Future timestamps (where `fromISO` is
@@ -76,39 +76,39 @@ const ago = (value, unit) => `${value} ${unit}${value === 1 ? "" : "s"} ago`;
  * @returns {string} a human-readable relative duration
  */
 export const relativeTime = (fromISO, now = new Date()) => {
-    if (typeof fromISO !== "string") {
-        return "";
-    }
+  if (typeof fromISO !== "string") {
+    return "";
+  }
 
-    const fromMs = Date.parse(fromISO);
-    if (Number.isNaN(fromMs)) {
-        return "";
-    }
+  const fromMs = Date.parse(fromISO);
+  if (Number.isNaN(fromMs)) {
+    return "";
+  }
 
-    const nowMs = now instanceof Date ? now.getTime() : Number(now);
-    if (!Number.isFinite(nowMs)) {
-        return "";
-    }
+  const nowMs = now instanceof Date ? now.getTime() : Number(now);
+  if (!Number.isFinite(nowMs)) {
+    return "";
+  }
 
-    const elapsedSeconds = Math.floor((nowMs - fromMs) / 1000);
+  const elapsedSeconds = Math.floor((nowMs - fromMs) / 1000);
 
-    if (elapsedSeconds < MINUTE) {
-        return "just now";
-    }
-    if (elapsedSeconds < HOUR) {
-        return ago(Math.floor(elapsedSeconds / MINUTE), "minute");
-    }
-    if (elapsedSeconds < DAY) {
-        return ago(Math.floor(elapsedSeconds / HOUR), "hour");
-    }
-    if (elapsedSeconds < WEEK) {
-        return ago(Math.floor(elapsedSeconds / DAY), "day");
-    }
-    if (elapsedSeconds < MONTH) {
-        return ago(Math.floor(elapsedSeconds / WEEK), "week");
-    }
-    if (elapsedSeconds < YEAR) {
-        return ago(Math.floor(elapsedSeconds / MONTH), "month");
-    }
-    return ago(Math.floor(elapsedSeconds / YEAR), "year");
+  if (elapsedSeconds < MINUTE) {
+    return "just now";
+  }
+  if (elapsedSeconds < HOUR) {
+    return ago(Math.floor(elapsedSeconds / MINUTE), "minute");
+  }
+  if (elapsedSeconds < DAY) {
+    return ago(Math.floor(elapsedSeconds / HOUR), "hour");
+  }
+  if (elapsedSeconds < WEEK) {
+    return ago(Math.floor(elapsedSeconds / DAY), "day");
+  }
+  if (elapsedSeconds < MONTH) {
+    return ago(Math.floor(elapsedSeconds / WEEK), "week");
+  }
+  if (elapsedSeconds < YEAR) {
+    return ago(Math.floor(elapsedSeconds / MONTH), "month");
+  }
+  return ago(Math.floor(elapsedSeconds / YEAR), "year");
 };

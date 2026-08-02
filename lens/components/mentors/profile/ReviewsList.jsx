@@ -10,9 +10,8 @@ import { formatRating } from "@/util/format";
  * ReviewsList — displays paginated mentor reviews with rating, name, and text.
  *
  * Shows up to 10 reviews per page with prev/next pagination controls.
- * If no reviews exist, an empty-state message is shown (Req 11.4).
+ * If no reviews exist, an empty-state message is shown.
  *
- * Requirements: 11.3, 11.4
  *
  * @param {Object} props
  * @param {Array} props.reviews - the full list of reviews
@@ -26,7 +25,6 @@ const ReviewsList = ({ reviews = [] }) => {
     const goToPrev = () => setPage((p) => Math.max(1, p - 1));
     const goToNext = () => setPage((p) => Math.min(totalPages, p + 1));
 
-    // Empty state (Req 11.4)
     if (!reviews || reviews.length === 0) {
         return (
             <section

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * "Forgot Password?" action link (Req 6.3).
+ * "Forgot Password?" action link
  * Keyboard focusable and activatable via keyboard (uses <button> for semantics).
  */
 const ForgotPasswordLink = ({ onClick }) => {

@@ -29,14 +29,14 @@
  * @type {Readonly<Record<"LOADING" | "LOADED" | "EMPTY" | "ERROR", AsyncStatus>>}
  */
 export const STATUS = Object.freeze({
-    LOADING: "loading",
-    LOADED: "loaded",
-    EMPTY: "empty",
-    ERROR: "error",
+  LOADING: "loading",
+  LOADED: "loaded",
+  EMPTY: "empty",
+  ERROR: "error",
 });
 
 /**
- * Delay before the loading skeleton becomes visible, in milliseconds (Req 13.1).
+ * Delay before the loading skeleton becomes visible, in milliseconds.
  *
  * A fetch that settles faster than this never shows a skeleton, preventing a
  * flash of skeleton for near-instant responses.
@@ -44,7 +44,7 @@ export const STATUS = Object.freeze({
 export const SKELETON_SHOW_DELAY_MS = 100;
 
 /**
- * Minimum time the skeleton stays visible once shown, in milliseconds (Req 13.3).
+ * Minimum time the skeleton stays visible once shown, in milliseconds.
  *
  * Once the skeleton appears it remains for at least this long, preventing a
  * flicker when the fetch completes shortly after the skeleton appears.
@@ -54,25 +54,25 @@ export const MIN_SKELETON_DURATION_MS = 300;
 /**
  * Per-context fetch deadlines in milliseconds.
  *
- *   - `default` (15s): the generic loading→error fallback (Req 13.4).
- *   - `error`   (10s): the Error_State contract deadline (Req 15.1, 15.3).
- *   - `mentorProfile` (5s): the Mentor Profile page deadline (Req 11.7).
+ *   - `default` (15s): the generic loading→error fallback.
+ *   - `error`   (10s): the Error_State contract deadline.
+ *   - `mentorProfile` (5s): the Mentor Profile page deadline.
  *
  * On timeout the async state transitions to "error".
  *
  * @type {Readonly<Record<"default" | "error" | "mentorProfile", number>>}
  */
 export const TIMEOUTS = Object.freeze({
-    default: 15000,
-    error: 10000,
-    mentorProfile: 5000,
+  default: 15000,
+  error: 10000,
+  mentorProfile: 5000,
 });
 
-/** The default fetch deadline when a caller supplies no `timeoutMs` (Req 13.4). */
+/** The default fetch deadline when a caller supplies no `timeoutMs`. */
 export const DEFAULT_TIMEOUT_MS = TIMEOUTS.default;
 
 /**
- * Report whether a resolved fetch result should be treated as "empty" (Req 14.1).
+ * Report whether a resolved fetch result should be treated as "empty".
  *
  * A successful fetch that yields zero items renders the Empty_State rather than
  * the loaded content. Emptiness is defined defensively so the machine stays
@@ -88,26 +88,26 @@ export const DEFAULT_TIMEOUT_MS = TIMEOUTS.default;
  * @returns {boolean} true when the result represents zero items
  */
 export const isEmpty = (data) => {
-    if (data === null || data === undefined) {
-        return true;
-    }
-    if (Array.isArray(data)) {
-        return data.length === 0;
-    }
-    if (data instanceof Map || data instanceof Set) {
-        return data.size === 0;
-    }
-    if (typeof data === "string") {
-        return data.trim().length === 0;
-    }
-    if (typeof data === "object") {
-        return Object.keys(data).length === 0;
-    }
-    return false;
+  if (data === null || data === undefined) {
+    return true;
+  }
+  if (Array.isArray(data)) {
+    return data.length === 0;
+  }
+  if (data instanceof Map || data instanceof Set) {
+    return data.size === 0;
+  }
+  if (typeof data === "string") {
+    return data.trim().length === 0;
+  }
+  if (typeof data === "object") {
+    return Object.keys(data).length === 0;
+  }
+  return false;
 };
 
 /**
- * Select the single UI variant to render for an async state (Req 13.4, 14.2, 14.3, 15.1).
+ * Select the single UI variant to render for an async state.
  *
  * Returns exactly one of "loading" | "loaded" | "empty" | "error", guaranteeing
  * the variants are mutually exclusive: while loading, neither the empty nor the
@@ -120,17 +120,17 @@ export const isEmpty = (data) => {
  * @returns {AsyncStatus} the single variant to render
  */
 export const selectVariant = (state) => {
-    const status = state && typeof state === "object" ? state.status : undefined;
-    switch (status) {
-        case STATUS.ERROR:
-            return STATUS.ERROR;
-        case STATUS.EMPTY:
-            return STATUS.EMPTY;
-        case STATUS.LOADED:
-            return STATUS.LOADED;
-        case STATUS.LOADING:
-            return STATUS.LOADING;
-        default:
-            return STATUS.LOADING;
-    }
+  const status = state && typeof state === "object" ? state.status : undefined;
+  switch (status) {
+    case STATUS.ERROR:
+      return STATUS.ERROR;
+    case STATUS.EMPTY:
+      return STATUS.EMPTY;
+    case STATUS.LOADED:
+      return STATUS.LOADED;
+    case STATUS.LOADING:
+      return STATUS.LOADING;
+    default:
+      return STATUS.LOADING;
+  }
 };

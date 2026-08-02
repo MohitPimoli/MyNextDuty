@@ -16,17 +16,17 @@
  * Requirements: 3.4, 6.4, 6.5, 17.9
  */
 
-/** The password field name cleared by the auth-failure transform (Req 6.5). */
+/** The password field name cleared by the auth-failure transform. */
 export const PASSWORD_FIELD = "password";
 
 /**
- * The identity field names retained by the auth-failure transform (Req 6.5).
+ * The identity field names retained by the auth-failure transform.
  * @type {ReadonlyArray<string>}
  */
 export const IDENTITY_FIELDS = ["email", "username"];
 
 /**
- * Build the form state for a failed validation submit (Req 3.4, 6.4, 17.9).
+ * Build the form state for a failed validation submit.
  *
  * Every field keeps its original value unchanged, and each field that has an
  * entry in `errors` additionally carries the associated reason message so the
@@ -44,24 +44,23 @@ export const IDENTITY_FIELDS = ["email", "username"];
  * @returns {Record<string, FieldState>} the retained form state
  */
 export const retainValues = (fields, errors) => {
-    const source = fields && typeof fields === "object" ? fields : {};
-    const reasons = errors && typeof errors === "object" ? errors : {};
+  const source = fields && typeof fields === "object" ? fields : {};
+  const reasons = errors && typeof errors === "object" ? errors : {};
 
-    const result = {};
-    for (const name of Object.keys(source)) {
-        const reason = reasons[name];
-        const hasReason =
-            typeof reason === "string" && reason.trim().length > 0;
-        result[name] = {
-            value: source[name],
-            reason: hasReason ? reason : null,
-        };
-    }
-    return result;
+  const result = {};
+  for (const name of Object.keys(source)) {
+    const reason = reasons[name];
+    const hasReason = typeof reason === "string" && reason.trim().length > 0;
+    result[name] = {
+      value: source[name],
+      reason: hasReason ? reason : null,
+    };
+  }
+  return result;
 };
 
 /**
- * Transform form state after a failed authentication/registration (Req 6.5).
+ * Transform form state after a failed authentication/registration.
  *
  * The entered email/username value(s) are retained while the password field is
  * cleared to an empty string, so the user does not have to re-enter their
@@ -77,11 +76,11 @@ export const retainValues = (fields, errors) => {
  *   the identity value(s) retained
  */
 export const authFailureTransform = (state) => {
-    const source = state && typeof state === "object" ? state : {};
-    const next = { ...source };
+  const source = state && typeof state === "object" ? state : {};
+  const next = { ...source };
 
-    if (Object.prototype.hasOwnProperty.call(next, PASSWORD_FIELD)) {
-        next[PASSWORD_FIELD] = "";
-    }
-    return next;
+  if (Object.prototype.hasOwnProperty.call(next, PASSWORD_FIELD)) {
+    next[PASSWORD_FIELD] = "";
+  }
+  return next;
 };

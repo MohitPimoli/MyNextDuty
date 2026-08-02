@@ -10,7 +10,7 @@ import {
 import PageContainer from "@/components/common/PageContainer";
 
 /**
- * Public Landing page (Req 5.1, 5.6).
+ * Public Landing page
  *
  * Renders all marketing sections in the fixed order:
  * Hero → Features → How It Works → Community → Testimonials → Roadmap Preview → Footer.

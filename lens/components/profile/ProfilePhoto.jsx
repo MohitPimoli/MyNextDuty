@@ -1,5 +1,5 @@
 import { User } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { resolveImage } from "@/util/format";
 import { cn } from "@/util/cn";
 
@@ -10,7 +10,7 @@ const PLACEHOLDER = "/assets/default-avatar.png";
  *
  * Uses the Avatar primitive with AvatarImage/AvatarFallback. When no photoUrl
  * is set or the image fails to load, shows the user's initials (if a name is
- * provided) or a generic User icon as fallback (Req 12.6).
+ * provided) or a generic User icon as fallback.
  *
  * Requirements: 12.1, 12.6
  *
@@ -20,35 +20,32 @@ const PLACEHOLDER = "/assets/default-avatar.png";
  * @param {string} [props.className] - additional classes for the avatar container.
  */
 const ProfilePhoto = ({ photoUrl, name, className }) => {
-    const resolvedUrl = resolveImage(photoUrl, "");
-    const initials = name
-        ? name
-            .split(" ")
-            .filter(Boolean)
-            .slice(0, 2)
-            .map((part) => part[0].toUpperCase())
-            .join("")
-        : null;
+  const resolvedUrl = resolveImage(photoUrl, "");
+  const initials = name
+    ? name
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0].toUpperCase())
+        .join("")
+    : null;
 
-    return (
-        <Avatar
-            className={cn(
-                "h-20 w-20 border-4 border-card shadow-medium sm:h-24 sm:w-24",
-                className
-            )}
-        >
-            {resolvedUrl ? (
-                <AvatarImage src={resolvedUrl} alt={name ? `${name}'s profile photo` : "Profile photo"} />
-            ) : null}
-            <AvatarFallback className="bg-muted text-text-secondary">
-                {initials ? (
-                    <span className="text-lg font-semibold sm:text-xl">{initials}</span>
-                ) : (
-                    <User className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
-                )}
-            </AvatarFallback>
-        </Avatar>
-    );
+  return (
+    <Avatar
+      className={cn("h-20 w-20 border-4 border-card shadow-medium sm:h-24 sm:w-24", className)}
+    >
+      {resolvedUrl ? (
+        <AvatarImage src={resolvedUrl} alt={name ? `${name}'s profile photo` : "Profile photo"} />
+      ) : null}
+      <AvatarFallback className="bg-muted text-text-secondary">
+        {initials ? (
+          <span className="text-lg font-semibold sm:text-xl">{initials}</span>
+        ) : (
+          <User className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
+        )}
+      </AvatarFallback>
+    </Avatar>
+  );
 };
 
 export default ProfilePhoto;

@@ -19,7 +19,7 @@ const PAGE_DURATION = 0.3;
  *
  * AnimatePresence `mode="wait"` ensures that if a navigation fires mid-
  * transition, the outgoing animation completes (or is interrupted gracefully)
- * before the incoming page animates in (Req 18.5).
+ * before the incoming page animates in.
  *
  * Duration and offset are driven by design tokens defined in index.css:
  *   --motion-page-duration: 300ms (within the 200–400ms requirement)
@@ -31,21 +31,21 @@ const PAGE_DURATION = 0.3;
  * @returns {JSX.Element}
  */
 const PageTransition = ({ children }) => {
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    return (
-        <AnimatePresence mode="wait">
-            <motion.div
-                key={pathname}
-                initial={{ opacity: 0, y: "var(--motion-page-offset)" }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: "var(--motion-page-offset)" }}
-                transition={{ duration: PAGE_DURATION, ease: "easeOut" }}
-            >
-                {children}
-            </motion.div>
-        </AnimatePresence>
-    );
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0, y: "var(--motion-page-offset)" }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: "var(--motion-page-offset)" }}
+        transition={{ duration: PAGE_DURATION, ease: "easeOut" }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
 };
 
 export default PageTransition;

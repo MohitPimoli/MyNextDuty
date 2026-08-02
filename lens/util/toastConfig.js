@@ -1,5 +1,5 @@
 /**
- * Pure configuration helpers for the toast facade (Requirement 15.5).
+ * Pure configuration helpers for the toast facade.
  *
  * Keeping this logic in a dependency-free module makes the auto-dismiss
  * bounds testable without rendering react-toastify.
@@ -25,14 +25,14 @@ export const DEFAULT_AUTO_CLOSE_MS = 5000;
  * @returns {number} A duration within [3000, 10000].
  */
 export const clampAutoClose = (ms) => {
-    if (typeof ms !== "number" || !Number.isFinite(ms)) {
-        return DEFAULT_AUTO_CLOSE_MS;
-    }
-    if (ms < MIN_AUTO_CLOSE_MS) {
-        return MIN_AUTO_CLOSE_MS;
-    }
-    if (ms > MAX_AUTO_CLOSE_MS) {
-        return MAX_AUTO_CLOSE_MS;
-    }
-    return ms;
+  if (typeof ms !== "number" || !Number.isFinite(ms)) {
+    return DEFAULT_AUTO_CLOSE_MS;
+  }
+  if (ms < MIN_AUTO_CLOSE_MS) {
+    return MIN_AUTO_CLOSE_MS;
+  }
+  if (ms > MAX_AUTO_CLOSE_MS) {
+    return MAX_AUTO_CLOSE_MS;
+  }
+  return ms;
 };

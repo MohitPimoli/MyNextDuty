@@ -41,8 +41,7 @@ export const DEFAULT_FILTER = "Newest";
  * @param {unknown} value - the candidate value
  * @returns {number} the value when finite, otherwise 0
  */
-const toNumber = (value) =>
-    typeof value === "number" && Number.isFinite(value) ? value : 0;
+const toNumber = (value) => (typeof value === "number" && Number.isFinite(value) ? value : 0);
 
 /**
  * Parse an ISO timestamp to milliseconds for descending "newest first" order.
@@ -54,15 +53,15 @@ const toNumber = (value) =>
  * @returns {number} epoch milliseconds, or -Infinity when unparseable
  */
 const toTime = (value) => {
-    if (typeof value !== "string") {
-        return Number.NEGATIVE_INFINITY;
-    }
-    const ms = Date.parse(value);
-    return Number.isNaN(ms) ? Number.NEGATIVE_INFINITY : ms;
+  if (typeof value !== "string") {
+    return Number.NEGATIVE_INFINITY;
+  }
+  const ms = Date.parse(value);
+  return Number.isNaN(ms) ? Number.NEGATIVE_INFINITY : ms;
 };
 
 /**
- * Compare two questions by recency, most recent first (Req 9.3).
+ * Compare two questions by recency, most recent first.
  *
  * @param {Question} a
  * @param {Question} b
@@ -71,7 +70,7 @@ const toTime = (value) => {
 const byNewest = (a, b) => toTime(b.createdAt) - toTime(a.createdAt);
 
 /**
- * Compare two questions by engagement (likes + views), highest first (Req 9.3).
+ * Compare two questions by engagement (likes + views), highest first.
  *
  * Ties fall back to newest so the ordering is deterministic.
  *
@@ -80,16 +79,16 @@ const byNewest = (a, b) => toTime(b.createdAt) - toTime(a.createdAt);
  * @returns {number}
  */
 const byTrending = (a, b) => {
-    const engagementA = toNumber(a.likeCount) + toNumber(a.viewCount);
-    const engagementB = toNumber(b.likeCount) + toNumber(b.viewCount);
-    if (engagementB !== engagementA) {
-        return engagementB - engagementA;
-    }
-    return byNewest(a, b);
+  const engagementA = toNumber(a.likeCount) + toNumber(a.viewCount);
+  const engagementB = toNumber(b.likeCount) + toNumber(b.viewCount);
+  if (engagementB !== engagementA) {
+    return engagementB - engagementA;
+  }
+  return byNewest(a, b);
 };
 
 /**
- * Compare two questions for the Unanswered filter (Req 9.3).
+ * Compare two questions for the Unanswered filter.
  *
  * Questions with no replies (`replyCount === 0`) come first; within each group
  * the newest question wins.
@@ -99,16 +98,16 @@ const byTrending = (a, b) => {
  * @returns {number}
  */
 const byUnanswered = (a, b) => {
-    const aUnanswered = toNumber(a.replyCount) === 0 ? 0 : 1;
-    const bUnanswered = toNumber(b.replyCount) === 0 ? 0 : 1;
-    if (aUnanswered !== bUnanswered) {
-        return aUnanswered - bUnanswered;
-    }
-    return byNewest(a, b);
+  const aUnanswered = toNumber(a.replyCount) === 0 ? 0 : 1;
+  const bUnanswered = toNumber(b.replyCount) === 0 ? 0 : 1;
+  if (aUnanswered !== bUnanswered) {
+    return aUnanswered - bUnanswered;
+  }
+  return byNewest(a, b);
 };
 
 /**
- * Compare two questions by helpfulness, most likes first (Req 9.3).
+ * Compare two questions by helpfulness, most likes first.
  *
  * Ties break by reply count (more discussion first), then by newest.
  *
@@ -117,32 +116,32 @@ const byUnanswered = (a, b) => {
  * @returns {number}
  */
 const byMostHelpful = (a, b) => {
-    const likeDelta = toNumber(b.likeCount) - toNumber(a.likeCount);
-    if (likeDelta !== 0) {
-        return likeDelta;
-    }
-    const replyDelta = toNumber(b.replyCount) - toNumber(a.replyCount);
-    if (replyDelta !== 0) {
-        return replyDelta;
-    }
-    return byNewest(a, b);
+  const likeDelta = toNumber(b.likeCount) - toNumber(a.likeCount);
+  if (likeDelta !== 0) {
+    return likeDelta;
+  }
+  const replyDelta = toNumber(b.replyCount) - toNumber(a.replyCount);
+  if (replyDelta !== 0) {
+    return replyDelta;
+  }
+  return byNewest(a, b);
 };
 
 /** Comparator lookup keyed by filter name. */
 const COMPARATORS = Object.freeze({
-    Newest: byNewest,
-    Trending: byTrending,
-    Unanswered: byUnanswered,
-    MostHelpful: byMostHelpful,
+  Newest: byNewest,
+  Trending: byTrending,
+  Unanswered: byUnanswered,
+  MostHelpful: byMostHelpful,
 });
 
 /**
- * Reorder community questions according to the selected filter (Req 9.3, 9.4).
+ * Reorder community questions according to the selected filter.
  *
  * This is a pure, non-mutating permutation: the input array is copied before
  * sorting, so the caller's array is left untouched, and the result contains
  * exactly the same elements in a (possibly) new order. An unknown, missing, or
- * `undefined` filter falls back to Newest (Req 9.4). Non-array input yields an
+ * `undefined` filter falls back to Newest. Non-array input yields an
  * empty array.
  *
  * @param {ReadonlyArray<Question>} questions - the questions to order
@@ -150,9 +149,9 @@ const COMPARATORS = Object.freeze({
  * @returns {Question[]} a new array ordered per the filter
  */
 export const applyFilter = (questions, filter) => {
-    if (!Array.isArray(questions)) {
-        return [];
-    }
-    const comparator = COMPARATORS[filter] ?? COMPARATORS[DEFAULT_FILTER];
-    return [...questions].sort(comparator);
+  if (!Array.isArray(questions)) {
+    return [];
+  }
+  const comparator = COMPARATORS[filter] ?? COMPARATORS[DEFAULT_FILTER];
+  return [...questions].sort(comparator);
 };

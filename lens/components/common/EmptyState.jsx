@@ -10,9 +10,8 @@ import { cn } from "@/util/cn";
  * Contains an illustration with a text alternative announced to assistive
  * technology, an explanatory message, and exactly one primary call-to-action
  * that invokes the supplied callback. The single CTA is a native button, so it
- * is operable by both pointer and keyboard (Req 14.1, 14.4, 14.5).
+ * is operable by both pointer and keyboard
  *
- * Requirements: 14.1, 14.4, 14.5
  *
  * @param {Object} props
  * @param {import("lucide-react").LucideIcon} [props.icon=Inbox] - illustration
@@ -23,7 +22,7 @@ import { cn } from "@/util/cn";
  * @param {string} props.message - explanatory text describing the empty region.
  * @param {string} props.ctaLabel - label for the single primary call-to-action.
  * @param {() => void} props.onCta - callback invoked when the CTA is activated
- *   by pointer or keyboard (Req 14.4).
+ *   by pointer or keyboard
  * @param {string} [props.className] - classes applied to the outer container.
  * @returns {JSX.Element}
  */

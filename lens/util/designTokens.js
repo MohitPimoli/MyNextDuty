@@ -19,51 +19,51 @@ export const THEMES = ["light", "dark"];
 /**
  * Color token maps per theme. Each value is a hex color string.
  *
- * Surface/text tokens differ between light and dark (Req 1.3, 1.4, 1.11);
+ * Surface/text tokens differ between light and dark;
  * brand and semantic tokens (primary, primaryHover, success, warning, danger)
- * and textInverse are shared across themes (Req 1.1, 1.2).
+ * and textInverse are shared across themes.
  *
  * @type {Readonly<Record<"light" | "dark", Readonly<Record<string, string>>>>}
  */
 export const TOKENS = {
-    light: {
-        // Surfaces & borders
-        background: "#F8FAFC",
-        card: "#FFFFFF",
-        border: "#E2E8F0",
-        // Text
-        textPrimary: "#0F172A",
-        textSecondary: "#64748B",
-        textInverse: "#F8FAFC",
-        // Brand
-        primary: "#4F46E5",
-        primaryHover: "#4338CA",
-        // Semantic
-        success: "#22C55E",
-        warning: "#F59E0B",
-        danger: "#EF4444",
-    },
-    dark: {
-        // Surfaces & borders (dark-mode overrides)
-        background: "#0F172A",
-        card: "#1E293B",
-        border: "#334155",
-        // Text (dark-mode overrides)
-        textPrimary: "#F8FAFC",
-        textSecondary: "#94A3B8",
-        textInverse: "#F8FAFC",
-        // Brand (shared across themes)
-        primary: "#4F46E5",
-        primaryHover: "#4338CA",
-        // Semantic (shared across themes)
-        success: "#22C55E",
-        warning: "#F59E0B",
-        danger: "#EF4444",
-    },
+  light: {
+    // Surfaces & borders
+    background: "#F8FAFC",
+    card: "#FFFFFF",
+    border: "#E2E8F0",
+    // Text
+    textPrimary: "#0F172A",
+    textSecondary: "#64748B",
+    textInverse: "#F8FAFC",
+    // Brand
+    primary: "#4F46E5",
+    primaryHover: "#4338CA",
+    // Semantic
+    success: "#22C55E",
+    warning: "#F59E0B",
+    danger: "#EF4444",
+  },
+  dark: {
+    // Surfaces & borders (dark-mode overrides)
+    background: "#0F172A",
+    card: "#1E293B",
+    border: "#334155",
+    // Text (dark-mode overrides)
+    textPrimary: "#F8FAFC",
+    textSecondary: "#94A3B8",
+    textInverse: "#F8FAFC",
+    // Brand (shared across themes)
+    primary: "#4F46E5",
+    primaryHover: "#4338CA",
+    // Semantic (shared across themes)
+    success: "#22C55E",
+    warning: "#F59E0B",
+    danger: "#EF4444",
+  },
 };
 
 /**
- * The strict 8px spacing scale (Req 1.7): at least 6 discrete steps, each a
+ * The strict 8px spacing scale: at least 6 discrete steps, each a
  * positive integer multiple of the 8px base unit. Represented as pixel
  * integers.
  * @type {ReadonlyArray<number>}
@@ -80,19 +80,15 @@ export const SPACING_SCALE = [8, 16, 24, 32, 40, 48];
  *   the theme
  */
 export const resolveToken = (theme, name) => {
-    const tokens = TOKENS[theme];
-    if (!tokens) {
-        throw new Error(
-            `Unknown theme "${theme}". Expected one of: ${THEMES.join(", ")}.`,
-        );
-    }
+  const tokens = TOKENS[theme];
+  if (!tokens) {
+    throw new Error(`Unknown theme "${theme}". Expected one of: ${THEMES.join(", ")}.`);
+  }
 
-    if (!Object.prototype.hasOwnProperty.call(tokens, name)) {
-        const known = Object.keys(tokens).join(", ");
-        throw new Error(
-            `Unknown token "${name}" for theme "${theme}". Known tokens: ${known}.`,
-        );
-    }
+  if (!Object.prototype.hasOwnProperty.call(tokens, name)) {
+    const known = Object.keys(tokens).join(", ");
+    throw new Error(`Unknown token "${name}" for theme "${theme}". Known tokens: ${known}.`);
+  }
 
-    return tokens[name];
+  return tokens[name];
 };

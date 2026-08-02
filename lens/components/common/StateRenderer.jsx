@@ -1,4 +1,4 @@
-import { STATUS, selectVariant } from "@/util/asyncState";
+import { selectVariant, STATUS } from "@/util/asyncState";
 
 import EmptyState from "./EmptyState";
 import ErrorState from "./ErrorState";
@@ -12,7 +12,7 @@ import LoadingState from "./LoadingState";
  * helper, renders exactly one of Loading / Empty / Error / Loaded. The
  * variants are mutually exclusive: it never renders more than one, the empty
  * and error variants never appear while loading, and the error variant never
- * coexists with loaded or partial data (Req 14.2, 14.3, 15.1).
+ * coexists with loaded or partial data
  *
  * Loaded content is provided as a render prop (`children` as a function of
  * `data`) or as plain children. The loading, empty, and error variants can be
@@ -28,10 +28,9 @@ import LoadingState from "./LoadingState";
  *
  * While loading, the skeleton is shown only when `showSkeleton` is true; a
  * fetch that settles before the skeleton-show delay therefore renders nothing
- * rather than flashing a skeleton (Req 13.1).
+ * rather than flashing a skeleton .
  *
- * Requirements: 7.4, 7.5, 7.6, 13.2, 14.1, 14.4, 14.5, 15.1
- *
+
  * @template T
  * @param {Object} props
  * @param {"loading"|"loaded"|"empty"|"error"} props.status - async status.
@@ -51,46 +50,42 @@ import LoadingState from "./LoadingState";
  * @returns {import("react").ReactNode}
  */
 const StateRenderer = ({
-    status,
-    data,
-    error,
-    retry,
-    showSkeleton = true,
-    children,
-    loading,
-    loadingProps,
-    empty,
-    emptyProps,
-    errorState,
-    errorProps,
+  status,
+  data,
+  error,
+  retry,
+  showSkeleton = true,
+  children,
+  loading,
+  loadingProps,
+  empty,
+  emptyProps,
+  errorState,
+  errorProps,
 }) => {
-    const variant = selectVariant({ status });
+  const variant = selectVariant({ status });
 
-    switch (variant) {
-        case STATUS.ERROR:
-            return (
-                errorState ?? (
-                    <ErrorState
-                        error={error}
-                        onRetry={errorProps?.onRetry ?? retry}
-                        {...errorProps}
-                    />
-                )
-            );
+  switch (variant) {
+    case STATUS.ERROR:
+      return (
+        errorState ?? (
+          <ErrorState error={error} onRetry={errorProps?.onRetry ?? retry} {...errorProps} />
+        )
+      );
 
-        case STATUS.EMPTY:
-            return empty ?? <EmptyState {...emptyProps} />;
+    case STATUS.EMPTY:
+      return empty ?? <EmptyState {...emptyProps} />;
 
-        case STATUS.LOADED:
-            return typeof children === "function" ? children(data) : children;
+    case STATUS.LOADED:
+      return typeof children === "function" ? children(data) : children;
 
-        case STATUS.LOADING:
-        default:
-            if (!showSkeleton) {
-                return null;
-            }
-            return loading ?? <LoadingState {...loadingProps} />;
-    }
+    case STATUS.LOADING:
+    default:
+      if (!showSkeleton) {
+        return null;
+      }
+      return loading ?? <LoadingState {...loadingProps} />;
+  }
 };
 
 export default StateRenderer;

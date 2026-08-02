@@ -29,7 +29,7 @@
  */
 
 /**
- * The design-token name each roadmap status maps to (Req 8.2, 8.3).
+ * The design-token name each roadmap status maps to.
  *
  * Each status maps to a distinct token so Completed, Current, and Locked nodes
  * are visually distinguishable from one another.
@@ -37,14 +37,13 @@
  * @type {Readonly<Record<"Completed" | "Current" | "Locked", string>>}
  */
 export const STATUS_TOKENS = Object.freeze({
-    Completed: "success",
-    Current: "primary",
-    Locked: "textSecondary",
+  Completed: "success",
+  Current: "primary",
+  Locked: "textSecondary",
 });
 
 /**
- * Return roadmap nodes sorted top-to-bottom by their `order` field, ascending
- * (Req 8.1).
+ * Return roadmap nodes sorted top-to-bottom by their `order` field, ascending.
  *
  * This is a pure, non-mutating operation: the input array is copied before
  * sorting, so the caller's array (and its ordering) is left untouched. The
@@ -55,14 +54,14 @@ export const STATUS_TOKENS = Object.freeze({
  * @returns {RoadmapNode[]} a new array ordered by ascending `order`
  */
 export const orderNodes = (nodes) => {
-    if (!Array.isArray(nodes)) {
-        return [];
-    }
-    return [...nodes].sort((a, b) => a.order - b.order);
+  if (!Array.isArray(nodes)) {
+    return [];
+  }
+  return [...nodes].sort((a, b) => a.order - b.order);
 };
 
 /**
- * Count the roadmap nodes whose status is "Current" (Req 8.5).
+ * Count the roadmap nodes whose status is "Current".
  *
  * Used to enforce the exactly-one-Current invariant: a non-empty roadmap
  * should return exactly 1. Non-array input yields 0.
@@ -71,17 +70,14 @@ export const orderNodes = (nodes) => {
  * @returns {number} the number of nodes with status "Current"
  */
 export const currentNodeCount = (nodes) => {
-    if (!Array.isArray(nodes)) {
-        return 0;
-    }
-    return nodes.reduce(
-        (count, node) => (node && node.status === "Current" ? count + 1 : count),
-        0,
-    );
+  if (!Array.isArray(nodes)) {
+    return 0;
+  }
+  return nodes.reduce((count, node) => (node && node.status === "Current" ? count + 1 : count), 0);
 };
 
 /**
- * Map a roadmap node status to its distinct design-token name (Req 8.2, 8.3).
+ * Map a roadmap node status to its distinct design-token name.
  *
  * Completed → "success", Current → "primary", Locked → "textSecondary". Each
  * status maps to a distinct token. An unknown or unsupported status is
@@ -93,17 +89,15 @@ export const currentNodeCount = (nodes) => {
  * @throws {Error} if the status is not one of Completed | Current | Locked
  */
 export const nodeStatusToken = (status) => {
-    if (!Object.prototype.hasOwnProperty.call(STATUS_TOKENS, status)) {
-        const known = Object.keys(STATUS_TOKENS).join(", ");
-        throw new Error(
-            `Unknown roadmap node status "${status}". Expected one of: ${known}.`,
-        );
-    }
-    return STATUS_TOKENS[status];
+  if (!Object.prototype.hasOwnProperty.call(STATUS_TOKENS, status)) {
+    const known = Object.keys(STATUS_TOKENS).join(", ");
+    throw new Error(`Unknown roadmap node status "${status}". Expected one of: ${known}.`);
+  }
+  return STATUS_TOKENS[status];
 };
 
 /**
- * Report per-field emptiness for a roadmap node's detail fields (Req 8.6).
+ * Report per-field emptiness for a roadmap node's detail fields..
  *
  * A field is "empty" when it has no usable value, so the detail panel can show
  * an empty-state indicator for that field while still rendering any field that
@@ -120,18 +114,16 @@ export const nodeStatusToken = (status) => {
  *   per-field emptiness, where `true` means the field is empty
  */
 export const nodeFieldEmptiness = (node) => {
-    const source = node && typeof node === "object" ? node : {};
+  const source = node && typeof node === "object" ? node : {};
 
-    const estimate = source.estimatedCompletion;
-    const estimatedCompletionEmpty =
-        typeof estimate !== "string" || estimate.trim().length === 0;
+  const estimate = source.estimatedCompletion;
+  const estimatedCompletionEmpty = typeof estimate !== "string" || estimate.trim().length === 0;
 
-    const resources = source.recommendedResources;
-    const recommendedResourcesEmpty =
-        !Array.isArray(resources) || resources.length === 0;
+  const resources = source.recommendedResources;
+  const recommendedResourcesEmpty = !Array.isArray(resources) || resources.length === 0;
 
-    return {
-        estimatedCompletion: estimatedCompletionEmpty,
-        recommendedResources: recommendedResourcesEmpty,
-    };
+  return {
+    estimatedCompletion: estimatedCompletionEmpty,
+    recommendedResources: recommendedResourcesEmpty,
+  };
 };

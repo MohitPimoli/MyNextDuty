@@ -7,7 +7,7 @@ import { MotionConfig } from "motion/react";
  *
  * Sets `reducedMotion="user"` so that when the OS requests reduced motion,
  * all motion animations are disabled while content and state changes still
- * render correctly (Req 18.4).
+ * render correctly.
  *
  * This wrapper exists because MotionConfig uses client hooks internally, and
  * the root layout remains a server component. Importing this client component
@@ -17,7 +17,7 @@ import { MotionConfig } from "motion/react";
  * @returns {JSX.Element}
  */
 const MotionProvider = ({ children }) => (
-    <MotionConfig reducedMotion="user">{children}</MotionConfig>
+  <MotionConfig reducedMotion="user">{children}</MotionConfig>
 );
 
 export default MotionProvider;

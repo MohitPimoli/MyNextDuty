@@ -132,7 +132,7 @@ export default function ProfilePage() {
         );
     }
 
-    // Main profile view wrapped in StateRenderer (Req 12.5)
+    // Main profile view wrapped in StateRenderer
     return (
         <PageContainer>
             <StateRenderer
@@ -147,7 +147,7 @@ export default function ProfilePage() {
             >
                 {(data) => (
                     <div className="space-y-6">
-                        {/* Cover region (Req 12.1) */}
+                        {/* Cover region */}
                         <ProfileCover coverUrl={data.coverUrl ?? null} />
 
                         {/* Profile header: photo + name + career stage */}
@@ -172,14 +172,14 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        {/* Stats summary (Req 12.3) */}
+                        {/* Stats summary */}
                         <StatsSummary
                             streakDays={data.learningStreakDays ?? 0}
                             contributionScore={data.contributionScore ?? 0}
                             className="px-4"
                         />
 
-                        {/* Labeled sections: Roadmap, Achievements, Activity, Bookmarks (Req 12.2, 12.4) */}
+                        {/* Labeled sections: Roadmap, Achievements, Activity, Bookmarks */}
                         <div className="rounded-card border border-border bg-card p-4 shadow-low sm:p-6">
                             <ProfileSections
                                 roadmap={data.currentRoadmap ?? null}

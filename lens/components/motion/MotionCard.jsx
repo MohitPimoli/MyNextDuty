@@ -21,24 +21,22 @@ const HOVER_DURATION = 0.18;
  *
  * Reduced-motion behavior is handled at the MotionConfig level (wired in the
  * root layout in a separate task), which disables transforms automatically
- * when the OS requests reduced motion (Req 18.4).
- *
- * Validates: Requirements 18.2, 18.3
+ * when the OS requests reduced motion.
  *
  * @param {{ children: React.ReactNode, className?: string, [key: string]: any }} props
  * @returns {JSX.Element}
  */
 const MotionCard = ({ children, className, ...props }) => {
-    return (
-        <motion.div
-            className={className}
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: HOVER_DURATION, ease: "easeOut" }}
-            {...props}
-        >
-            {children}
-        </motion.div>
-    );
+  return (
+    <motion.div
+      className={className}
+      whileHover={{ scale: 1.03 }}
+      transition={{ duration: HOVER_DURATION, ease: "easeOut" }}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 export default MotionCard;

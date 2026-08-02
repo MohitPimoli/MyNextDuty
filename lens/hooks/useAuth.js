@@ -1,14 +1,13 @@
 "use client";
 
-import {useDispatch, useSelector} from "react-redux";
-import {authService} from "../service/auth.service";
+import { useDispatch, useSelector } from "react-redux";
+import { authService } from "../service/auth.service";
 import toastService from "../util/toastService";
-import {authLoginRequest, authLoginSuccess, authLogout} from "../redux/actions/auth.actions";
-import {navigate} from "../service/navigation.service";
-import {ROUTE_PATHS} from "../config/RoutePath";
-import {setToken, clearToken} from "../util/tokenService";
-import {persistor} from "../redux/store";
-import {useState} from "react";
+import { authLoginRequest, authLoginSuccess, authLogout } from "../redux/actions/auth.actions";
+import { ROUTE_PATHS } from "../config/RoutePath";
+import { clearToken, setToken } from "../util/tokenService";
+import { persistor } from "../redux/store";
+import { useState } from "react";
 
 export const useAuth = () => {
   const dispatch = useDispatch();

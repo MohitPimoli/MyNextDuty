@@ -9,14 +9,13 @@ import { cn } from "@/util/cn";
  *
  * Displays a message that identifies which content failed to load and a
  * "Try Again" action wired to the retry callback, without rendering any
- * partial or stale content (Req 15.1). The retry control is a native button,
+ * partial or stale content . The retry control is a native button,
  * operable by both pointer and keyboard.
  *
  * The failure message is derived from `contentLabel` (e.g. "recommendations"
  * → "We couldn't load recommendations.") unless an explicit `message` is
  * supplied. The region is announced assertively as an alert.
  *
- * Requirements: 15.1
  *
  * @param {Object} props
  * @param {string} [props.contentLabel="this content"] - name of the content
@@ -29,51 +28,51 @@ import { cn } from "@/util/cn";
  *   alert illustration, announced by assistive technology.
  * @param {string} [props.retryLabel="Try Again"] - label for the retry action.
  * @param {() => void} props.onRetry - callback invoked to retry the failed
- *   fetch, by pointer or keyboard (Req 15.1).
+ *   fetch, by pointer or keyboard .
  * @param {string} [props.className] - classes applied to the outer container.
  * @returns {JSX.Element}
  */
 const ErrorState = ({
-    contentLabel = "this content",
-    message,
-    icon: Icon = TriangleAlert,
-    illustrationAlt = "Error",
-    retryLabel = "Try Again",
-    onRetry,
-    className,
+  contentLabel = "this content",
+  message,
+  icon: Icon = TriangleAlert,
+  illustrationAlt = "Error",
+  retryLabel = "Try Again",
+  onRetry,
+  className,
 }) => {
-    const failureMessage = message ?? `We couldn't load ${contentLabel}.`;
+  const failureMessage = message ?? `We couldn't load ${contentLabel}.`;
 
-    return (
-        <div
-            role="alert"
-            className={cn(
-                "flex flex-col items-center justify-center gap-3 rounded-card bg-card p-4 text-center shadow-low",
-                className,
-            )}
+  return (
+    <div
+      role="alert"
+      className={cn(
+        "flex flex-col items-center justify-center gap-3 rounded-card bg-card p-4 text-center shadow-low",
+        className
+      )}
+    >
+      <span
+        role="img"
+        aria-label={illustrationAlt}
+        className="flex h-16 w-16 items-center justify-center rounded-full bg-background text-danger"
+      >
+        <Icon className="h-8 w-8" aria-hidden="true" />
+      </span>
+
+      <p className="max-w-prose text-sm text-text-secondary">{failureMessage}</p>
+
+      {onRetry && (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-1 inline-flex items-center justify-center gap-2 rounded-button bg-primary px-3 py-2 text-sm font-semibold text-text-inverse shadow-medium transition-colors duration-150 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-            <span
-                role="img"
-                aria-label={illustrationAlt}
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-background text-danger"
-            >
-                <Icon className="h-8 w-8" aria-hidden="true" />
-            </span>
-
-            <p className="max-w-prose text-sm text-text-secondary">{failureMessage}</p>
-
-            {onRetry && (
-                <button
-                    type="button"
-                    onClick={onRetry}
-                    className="mt-1 inline-flex items-center justify-center gap-2 rounded-button bg-primary px-3 py-2 text-sm font-semibold text-text-inverse shadow-medium transition-colors duration-150 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                >
-                    <RefreshCw className="h-4 w-4" aria-hidden="true" />
-                    {retryLabel}
-                </button>
-            )}
-        </div>
-    );
+          <RefreshCw className="h-4 w-4" aria-hidden="true" />
+          {retryLabel}
+        </button>
+      )}
+    </div>
+  );
 };
 
 export default ErrorState;

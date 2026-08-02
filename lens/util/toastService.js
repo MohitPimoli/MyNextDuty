@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { clampAutoClose } from "@/util/toastConfig";
 
 /*
- * Shared toast presentation (Requirements 15.4, 15.5, 15.6).
+ * Shared toast presentation.
  *
  * All toasts render top-right (15.4), auto-close within the bounded
  * [3000, 10000]ms range via clampAutoClose (15.5), and remain manually
@@ -13,8 +13,7 @@ import { clampAutoClose } from "@/util/toastConfig";
  */
 
 // Token-based surface shared by every toast kind.
-const baseClassName =
-  "bg-card text-text-primary rounded-card shadow-high border border-border";
+const baseClassName = "bg-card text-text-primary rounded-card shadow-high border border-border";
 
 // Semantic accent applied per kind using the design-system color tokens.
 const accentClassName = {
