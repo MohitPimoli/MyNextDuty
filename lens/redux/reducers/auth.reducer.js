@@ -1,16 +1,18 @@
 // redux/reducers/auth.reducer.js
 
 import {
+  AUTH_LOGIN_FAILURE,
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
-  AUTH_LOGIN_FAILURE,
   AUTH_LOGOUT,
   AUTH_TOKEN_REFRESHED,
 } from "@/util/constants";
 
 const initialState = {
   isAuthenticated: false,
-  user: null,
+  email: null,
+  firstName: null,
+  lastName: null,
   token: null,
   loading: false,
   error: null,
@@ -30,22 +32,24 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         isAuthenticated: true,
-        user: action.payload.user,
-        token: action.payload.token,
+        email: action?.payload?.email,
+        firstName: action?.payload?.firstName,
+        lastName: action?.payload?.lastName,
+        token: action?.payload?.token,
       };
 
     case AUTH_LOGIN_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: action?.payload,
         isAuthenticated: false,
       };
 
     case AUTH_TOKEN_REFRESHED:
       return {
         ...state,
-        token: action.payload,
+        token: action?.payload,
       };
 
     case AUTH_LOGOUT:

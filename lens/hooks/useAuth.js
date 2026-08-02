@@ -26,8 +26,10 @@ export const useAuth = () => {
       }
       dispatch(
         authLoginSuccess({
-          user: payload.email,
-          token: payload.accessToken,
+          email: payload?.email,
+          firstName: payload?.firstName,
+          lastName: payload?.lastName,
+          token: payload?.accessToken,
         })
       );
       setToken(payload.accessToken);

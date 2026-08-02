@@ -44,8 +44,8 @@ export const QUICK_ACTIONS = Object.freeze([
     variant: "secondary",
   }),
   Object.freeze({
-    id: "update-profile",
-    label: "Update Profile",
+    id: "view-recommendations",
+    label: "View Recommendations",
     variant: "secondary",
   }),
 ]);

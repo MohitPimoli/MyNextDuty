@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, MessageSquare, UserCog, UserPlus } from "lucide-react";
+import { BookOpen, Lightbulb, MessageSquare, UserPlus } from "lucide-react";
 import Link from "next/link";
 
 import { QUICK_ACTIONS } from "@/util/dashboard";
@@ -14,7 +14,7 @@ const ACTION_ICONS = {
   "continue-learning": BookOpen,
   "ask-community": MessageSquare,
   "book-mentor": UserPlus,
-  "update-profile": UserCog,
+  "view-recommendations": Lightbulb,
 };
 
 /**
@@ -24,7 +24,7 @@ const ACTION_ROUTES = {
   "continue-learning": ROUTE_PATHS.ROADMAP,
   "ask-community": ROUTE_PATHS.COMMUNITY,
   "book-mentor": ROUTE_PATHS.MENTORS,
-  "update-profile": ROUTE_PATHS.PROFILE,
+  "view-recommendations": ROUTE_PATHS.RECOMMENDATIONS,
 };
 
 /**
@@ -39,7 +39,7 @@ const QuickActions = () => {
   return (
     <section aria-label="Quick actions" className="flex flex-col gap-3">
       <h2 className="text-lg font-semibold text-text-primary">Quick Actions</h2>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap justify-between">
         {QUICK_ACTIONS.map((action) => {
           const Icon = ACTION_ICONS[action.id];
           const route = ACTION_ROUTES[action.id];
@@ -47,6 +47,7 @@ const QuickActions = () => {
           return (
             <Link key={action.id} href={route || "#"}>
               <Button
+                size={"sm"}
                 variant={action.variant === "primary" ? "primary" : "secondary"}
                 leftIcon={Icon}
               >

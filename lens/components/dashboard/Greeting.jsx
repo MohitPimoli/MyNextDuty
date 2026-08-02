@@ -12,13 +12,13 @@ import { resolveGreeting } from "@/util/greeting";
  * Requirements: 7.1, 7.2
  */
 const Greeting = () => {
-  const userProfile = useSelector((state) => state.feed.userProfile);
-  const { term, name } = resolveGreeting(new Date(), userProfile?.firstName);
+  const firstName = useSelector((state) => state.auth.firstName);
+  const { term, name } = resolveGreeting(new Date(), firstName);
 
   return (
     <section aria-label="Greeting" className="flex flex-col gap-1">
       <h1 className="text-2xl font-bold text-text-primary sm:text-3xl">
-        {term}, {name}
+        {term}, <span style={{ color: "red" }}>{name}</span>
       </h1>
       <p className="text-sm text-text-secondary sm:text-base">Here&apos;s your next duty.</p>
     </section>

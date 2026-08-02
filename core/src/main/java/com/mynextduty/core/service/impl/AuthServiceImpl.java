@@ -87,6 +87,8 @@ public class AuthServiceImpl implements AuthService {
     return AuthResponseDto.builder()
         .id(user.getId().toString())
         .email(user.getEmail())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
         .accessToken(jwtUtil.generateToken(customUserDetails))
         .refreshToken(refreshToken)
         .build();

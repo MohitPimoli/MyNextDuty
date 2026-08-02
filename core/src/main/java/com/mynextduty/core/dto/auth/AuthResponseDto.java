@@ -22,6 +22,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public class AuthResponseDto {
   private String id;
   private String email;
+  private String firstName;
+  private String lastName;
   private String accessToken;
   private String refreshToken;
 }

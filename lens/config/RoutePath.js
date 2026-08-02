@@ -10,6 +10,7 @@ export const ROUTE_PATHS = {
   PROFILE: "/profile",
   ROADMAP: "/roadmap",
   COMMUNITY: "/community",
+  RECOMMENDATIONS: "/recommendations",
   MENTORS: "/mentors",
   MENTOR_PROFILE: (id) => `/mentors/${id}`,
   FORBIDDEN: "/forbidden",
