@@ -12,6 +12,7 @@ import com.mynextduty.core.exception.UserNotFoundException;
 import com.mynextduty.core.repository.DutiesRepository;
 import com.mynextduty.core.repository.UserDutyProgressRepository;
 import com.mynextduty.core.repository.UserRepository;
+import com.mynextduty.core.service.CurrentUserService;
 import com.mynextduty.core.service.RecommendationService;
 import java.util.Comparator;
 import java.util.List;
@@ -32,40 +33,36 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final UserRepository userRepository;
     private final DutiesRepository dutiesRepository;
     private final UserDutyProgressRepository userDutyProgressRepository;
+    private final CurrentUserService currentUserService;
 
     @Override
-    public List<DutyRecommendationDto> getPersonalizedRecommendations(Long userId) {
-        User user = loadUser(userId);
-        List<Duties> duties = dutiesRepository.findByTargetLifeStageAndIsActiveTrue(user.getLifeStage());
-        return mapAndRank(duties, user);
+    public List<DutyRecommendationDto> getPersonalizedRecommendations() {
+        User user = loadUser();
+        return mapAndRank(dutiesRepository.findByTargetLifeStageAndIsActiveTrue(user.getLifeStage()), user);
     }
 
     @Override
-    public List<DutyRecommendationDto> getRecommendationsByLifeStage(Long userId) {
-        User user = loadUser(userId);
-        List<Duties> duties = dutiesRepository.findByTargetLifeStageAndIsActiveTrue(user.getLifeStage());
-        return mapAndRank(duties, user);
+    public List<DutyRecommendationDto> getRecommendationsByLifeStage() {
+        User user = loadUser();
+        return mapAndRank(dutiesRepository.findByTargetLifeStageAndIsActiveTrue(user.getLifeStage()), user);
     }
 
     @Override
-    public List<DutyRecommendationDto> getRecommendationsByInterests(Long userId) {
-        User user = loadUser(userId);
-        List<Duties> duties = dutiesRepository.findByUserInterests(userId);
-        return mapAndRank(duties, user);
+    public List<DutyRecommendationDto> getRecommendationsByInterests() {
+        User user = loadUser();
+        return mapAndRank(dutiesRepository.findByUserInterests(user.getId()), user);
     }
 
     @Override
-    public List<DutyRecommendationDto> getCriticalRecommendations(Long userId) {
-        User user = loadUser(userId);
-        List<Duties> duties = dutiesRepository.findByPriorityAndIsActiveTrue(Priority.CRITICAL);
-        return mapAndRank(duties, user);
+    public List<DutyRecommendationDto> getCriticalRecommendations() {
+        return mapAndRank(dutiesRepository.findByPriorityAndIsActiveTrue(Priority.CRITICAL), loadUser());
     }
 
     // ------------------------------------------------------------------ helpers
 
-    private User loadUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+    private User loadUser() {
+        return userRepository.findById(currentUserService.getCurrentUserId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     /**
@@ -82,12 +79,8 @@ public class RecommendationServiceImpl implements RecommendationService {
                         p -> p,
                         (existing, replacement) -> existing   // keep first on conflict
                 ));
-
-        // Collect the user's interest IDs for overlap checks
-        Set<Long> userInterestIds = resolveUserInterestIds(user);
-
         return duties.stream()
-                .map(duty -> toDto(duty, user, progressMap, userInterestIds))
+                .map(duty -> toDto(duty, user, progressMap, resolveUserInterestIds(user)))
                 .sorted(
                         Comparator
                                 .comparingInt((DutyRecommendationDto d) -> d.getPriority().ordinal())
@@ -114,30 +107,19 @@ public class RecommendationServiceImpl implements RecommendationService {
             User user,
             Map<Long, UserDutyProgress> progressMap,
             Set<Long> userInterestIds) {
-
-        // -- Progress status
         UserDutyProgress progress = progressMap.get(duty.getId());
-        boolean isCompleted  = progress != null && progress.getStatus() == ProgressStatus.COMPLETED;
-        boolean isInProgress = progress != null && progress.getStatus() == ProgressStatus.IN_PROGRESS;
-
-        // -- Match score
-        int score = computeMatchScore(duty, user, userInterestIds);
-
-        // -- Category name (duty.category is ManyToOne, never null per DB constraint)
-        String categoryName = duty.getCategory() != null ? duty.getCategory().getName() : null;
-
         return DutyRecommendationDto.builder()
                 .id(duty.getId())
                 .title(duty.getTitle())
                 .description(duty.getDescription())
-                .category(categoryName)
+                .category(duty.getCategory() != null ? duty.getCategory().getName() : null)
                 .priority(duty.getPriority())
                 .estimatedCost(duty.getEstimatedCost())
                 .timeToComplete(duty.getTimeToComplete())
                 .reasonForRecommendation(null)    // not computed in this implementation
-                .matchScore(score)
-                .isCompleted(isCompleted)
-                .isInProgress(isInProgress)
+                .matchScore(computeMatchScore(duty, user, userInterestIds))
+                .isCompleted(progress != null && progress.getStatus() == ProgressStatus.COMPLETED)
+                .isInProgress(progress != null && progress.getStatus() == ProgressStatus.IN_PROGRESS)
                 .build();
     }
 

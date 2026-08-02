@@ -24,12 +24,13 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
   private final String secretKey;
-  @Getter
-  private final Long refreshTokenExpiration;
+  @Getter private final Long refreshTokenExpiration;
 
-  public JwtUtil(@Value("${core.jwt.secret:}") String secretKey, @Value("${core.jwt.refresh.expiration:}") Long refreshTokenExpiration)  {
+  public JwtUtil(
+      @Value("${core.jwt.secret:}") String secretKey,
+      @Value("${core.jwt.refresh.expiration:}") Long refreshTokenExpiration) {
     this.secretKey = secretKey;
-    this.refreshTokenExpiration=refreshTokenExpiration;
+    this.refreshTokenExpiration = refreshTokenExpiration;
   }
 
   public String extractUsername(String token) {
@@ -101,10 +102,11 @@ public class JwtUtil {
       throws IOException {
     response.setStatus(httpStatus);
     response.setContentType("application/json");
-    String jsonResponse =
-        String.format(
-            "{\"error\": \"%s\", \"errorCode\": %d, \"message\": \"%s\"}",
-            errorType, errorCode, message);
-    response.getWriter().write(jsonResponse);
+    response
+        .getWriter()
+        .write(
+            String.format(
+                "{\"error\": \"%s\", \"errorCode\": %d, \"message\": \"%s\"}",
+                errorType, errorCode, message));
   }
 }

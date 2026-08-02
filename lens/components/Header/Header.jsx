@@ -31,6 +31,15 @@ export const Header = () => {
             {initial}
           </div>
 
+          {/* Profile */}
+          <Link
+            href={ROUTE_PATHS.PROFILE}
+            aria-label="Go to your profile"
+            className="text-sm font-medium text-gray-600 transition hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Profile
+          </Link>
+
           {/* Logout */}
           <button
             onClick={logout}

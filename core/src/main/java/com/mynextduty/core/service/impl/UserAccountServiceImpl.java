@@ -7,7 +7,6 @@ import com.mynextduty.core.dto.user.UserProfileUpdateRequestDto;
 import com.mynextduty.core.dto.user.UserRegisterRequestDto;
 import com.mynextduty.core.dto.user.UserResponseDto;
 import com.mynextduty.core.entity.EducationLevel;
-import com.mynextduty.core.entity.Role;
 import com.mynextduty.core.entity.User;
 import com.mynextduty.core.exception.GenericApplicationException;
 import com.mynextduty.core.repository.EducationLevelRepository;
@@ -19,7 +18,6 @@ import com.mynextduty.core.service.VerificationService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,20 +43,18 @@ public class UserAccountServiceImpl implements UserAccountService {
     if (userRepository.findByEmail(registerRequestDto.getEmail()).isPresent()) {
       throw new GenericApplicationException("User already exists.", 409);
     }
-    Optional<Role> roleOptional = roleRepository.findById(3L);
-    User user =
-        User.builder()
-            .email(registerRequestDto.getEmail())
-            .passwordHash(
-                passwordEncoder.encode(
-                    passDecryptor.decryptPassword(registerRequestDto.getPassword())))
-            .firstName(registerRequestDto.getFirstName())
-            .lastName(registerRequestDto.getLastName())
-            .isVerified(false)
-            .role(roleOptional.get())
-            .build();
-    User savedUser = userRepository.save(user);
-    log.debug("New user registered with email: {}", registerRequestDto.getEmail());
+    User savedUser =
+        userRepository.save(
+            User.builder()
+                .email(registerRequestDto.getEmail())
+                .passwordHash(
+                    passwordEncoder.encode(
+                        passDecryptor.decryptPassword(registerRequestDto.getPassword())))
+                .firstName(registerRequestDto.getFirstName())
+                .lastName(registerRequestDto.getLastName())
+                .isVerified(false)
+                .role(roleRepository.findById(3L).get())
+                .build());
     verificationService.sendVerificationIfRequired(savedUser);
     return GlobalMessageDto.builder()
         .message("User registered successfully. Please check your email to verify your account.")
@@ -66,55 +62,43 @@ public class UserAccountServiceImpl implements UserAccountService {
   }
 
   @Override
-  public GlobalMessageDto verifyEmail() {
-    //    return verificationService.verifyEmail(token, currentUserService.getCurrentUserId());
-    // TODO: sned verification mail to user.
-    return GlobalMessageDto.builder().build();
-  }
-
-  @Override
   public GlobalMessageDto verify() {
-    User user = currentUserService.getCurrentUser();
-    return verificationService.resendVerification(user);
+    return verificationService.resendVerification(currentUserService.getCurrentUser());
   }
 
   @Override
   public UserResponseDto getUserProfile() {
-    User user = currentUserService.getCurrentUser();
-    return buildUserResponseDto(user);
+    return buildUserResponseDto(currentUserService.getCurrentUser());
   }
 
   @Override
   @Transactional
   public UserResponseDto updateUserProfile(UserProfileUpdateRequestDto dto) {
     User user = currentUserService.getCurrentUser();
-
     user.setFirstName(dto.getFirstName());
-    if (dto.getLastName()          != null) user.setLastName(dto.getLastName());
-    if (dto.getDateOfBirth()       != null) user.setDateOfBirth(dto.getDateOfBirth());
-    if (dto.getLifeStage()         != null) user.setLifeStage(dto.getLifeStage());
+    if (dto.getLastName() != null) user.setLastName(dto.getLastName());
+    if (dto.getDateOfBirth() != null) user.setDateOfBirth(dto.getDateOfBirth());
+    if (dto.getLifeStage() != null) user.setLifeStage(dto.getLifeStage());
     if (dto.getCurrentOccupation() != null) user.setCurrentOccupation(dto.getCurrentOccupation());
-    if (dto.getMonthlyIncome()     != null) user.setMonthlyIncome(dto.getMonthlyIncome());
-
+    if (dto.getMonthlyIncome() != null) user.setMonthlyIncome(dto.getMonthlyIncome());
     if (dto.getEducationLevelCode() != null) {
-      EducationLevel educationLevel = educationLevelRepository
-          .findByLevelCode(dto.getEducationLevelCode())
-          .filter(EducationLevel::isActive)
-          .orElseThrow(() ->
-              new GenericApplicationException("Education level not found.", 400));
-      user.setEducationLevel(educationLevel);
+      user.setEducationLevel(
+          educationLevelRepository
+              .findByLevelCode(dto.getEducationLevelCode())
+              .filter(EducationLevel::isActive)
+              .orElseThrow(
+                  () -> new GenericApplicationException("Education level not found.", 400)));
     }
-
-    User saved = userRepository.save(user);
-    return buildUserResponseDto(saved);
+    return buildUserResponseDto(userRepository.save(user));
   }
 
   @Override
   public List<EducationLevelDto> getActiveEducationLevels() {
     return educationLevelRepository.findAll().stream()
         .filter(EducationLevel::isActive)
-        .sorted(Comparator.comparing(EducationLevel::getLevelRank,
-                Comparator.nullsLast(Comparator.naturalOrder())))
+        .sorted(
+            Comparator.comparing(
+                EducationLevel::getLevelRank, Comparator.nullsLast(Comparator.naturalOrder())))
         .map(e -> new EducationLevelDto(e.getLevelCode(), e.getLevelName()))
         .toList();
   }
@@ -129,8 +113,8 @@ public class UserAccountServiceImpl implements UserAccountService {
         .lifeStage(user.getLifeStage())
         .currentOccupation(user.getCurrentOccupation())
         .monthlyIncome(user.getMonthlyIncome())
-        .educationLevel(user.getEducationLevel() != null
-            ? user.getEducationLevel().getLevelName() : null)
+        .educationLevel(
+            user.getEducationLevel() != null ? user.getEducationLevel().getLevelName() : null)
         .isVerified(user.isVerified())
         .build();
   }

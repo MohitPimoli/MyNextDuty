@@ -12,8 +12,6 @@ public interface UserAccountService {
   GlobalMessageDto register(
       UserRegisterRequestDto registerRequestDto, HttpServletResponse httpServletResponse);
 
-  GlobalMessageDto verifyEmail();
-
   GlobalMessageDto verify();
 
   UserResponseDto getUserProfile();

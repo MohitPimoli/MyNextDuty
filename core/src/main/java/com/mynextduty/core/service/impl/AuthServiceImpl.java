@@ -66,11 +66,10 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public AuthResponseDto login(
       AuthRequestDto authRequestDto, HttpServletResponse httpServletResponse) {
-    CustomUserDetails customUserDetails =
-        (CustomUserDetails) customUserDetailsService.loadUserByUsername(authRequestDto.getEmail());
-      String decryptedPassword = passDecryptor.decryptPassword(authRequestDto.getPassword());
-      authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(authRequestDto.getEmail(), decryptedPassword));
+    authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+            authRequestDto.getEmail(),
+            passDecryptor.decryptPassword(authRequestDto.getPassword())));
     User user =
         userRepository
             .findByEmail(authRequestDto.getEmail())
@@ -81,13 +80,14 @@ public class AuthServiceImpl implements AuthService {
                 });
     user.setLastAccessTime(LocalDateTime.now());
     userRepository.save(user);
-    String token = jwtUtil.generateToken(customUserDetails);
+    CustomUserDetails customUserDetails =
+        (CustomUserDetails) customUserDetailsService.loadUserByUsername(authRequestDto.getEmail());
     String refreshToken = jwtUtil.generateRefreshToken(customUserDetails);
     setRefreshTokenCookie(httpServletResponse, refreshToken);
     return AuthResponseDto.builder()
         .id(user.getId().toString())
         .email(user.getEmail())
-        .accessToken(token)
+        .accessToken(jwtUtil.generateToken(customUserDetails))
         .refreshToken(refreshToken)
         .build();
   }
@@ -115,12 +115,11 @@ public class AuthServiceImpl implements AuthService {
       blacklistToken.blackListRefreshToken(oldRefreshToken);
       CustomUserDetails userDetails =
           (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);
-      String newAccessToken = jwtUtil.generateToken(userDetails);
       String newRefreshToken = jwtUtil.generateRefreshToken(userDetails);
       setRefreshTokenCookie(httpServletResponse, newRefreshToken);
       return AuthResponseDto.builder()
           .email(email)
-          .accessToken(newAccessToken)
+          .accessToken(jwtUtil.generateToken(userDetails))
           .refreshToken(newRefreshToken)
           .build();
     } catch (TokenException | ExpiredJwtException e) {

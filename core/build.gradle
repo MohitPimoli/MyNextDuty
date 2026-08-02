@@ -55,9 +55,6 @@ dependencies {
     // Redisson
     implementation 'org.redisson:redisson-spring-boot-starter:4.5.0'
 
-    // ReteLimit
-    implementation 'com.bucket4j:bucket4j_jdk17-core:8.16.0'
-
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 

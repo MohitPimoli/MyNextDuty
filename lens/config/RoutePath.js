@@ -1,9 +1,17 @@
 /** Central path constants — use for `navigate()`, `Link to`, and interceptors. */
 export const ROUTE_PATHS = {
+  LANDING: "/",
   LOGIN: "/login",
-  HOME: "/",
+  REGISTER: "/register",
+  HOME: "/dashboard",
+  DASHBOARD: "/dashboard",
   VERIFY_EMAIL: "/verify-email",
   NEARBY: "/nearby",
+  PROFILE: "/profile",
+  ROADMAP: "/roadmap",
+  COMMUNITY: "/community",
+  MENTORS: "/mentors",
+  MENTOR_PROFILE: (id) => `/mentors/${id}`,
   FORBIDDEN: "/forbidden",
   NOT_FOUND: "/not-found",
   SERVER_ERROR: "/server-error",

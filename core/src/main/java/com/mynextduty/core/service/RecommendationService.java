@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface RecommendationService {
 
-    List<DutyRecommendationDto> getPersonalizedRecommendations(Long userId);
-    List<DutyRecommendationDto> getRecommendationsByLifeStage(Long userId);
-    List<DutyRecommendationDto> getRecommendationsByInterests(Long userId);
-    List<DutyRecommendationDto> getCriticalRecommendations(Long userId);
+    List<DutyRecommendationDto> getPersonalizedRecommendations();
+    List<DutyRecommendationDto> getRecommendationsByLifeStage();
+    List<DutyRecommendationDto> getRecommendationsByInterests();
+    List<DutyRecommendationDto> getCriticalRecommendations();
 
 }

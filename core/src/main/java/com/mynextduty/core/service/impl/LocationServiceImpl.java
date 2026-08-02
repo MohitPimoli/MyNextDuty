@@ -34,59 +34,46 @@ public class LocationServiceImpl implements LocationService {
   @Transactional
   public SuccessResponseDto<UserResponseDto> updateUserLocation(
       Long userId, UpdateLocationRequestDto req) {
-//    User user = currentUserService.getCurrentUser();
-    Point jtsPoint =
-        geometryFactory.createPoint(new Coordinate(req.getLongitude(), req.getLatitude()));
-    User user = userRepository.getById(userId);
+    User user = userRepository.getReferenceById(userId);
     UserLocation loc =
         userLocationRepository
             .findByUserId(user.getId())
             .orElse(UserLocation.builder().user(user).build());
     loc.setUser(user);
-    loc.setLocation(jtsPoint);
+    loc.setLocation(
+        geometryFactory.createPoint(new Coordinate(req.getLongitude(), req.getLatitude())));
     userLocationRepository.save(loc);
-    UserResponseDto userResponseDto = UserResponseDto.builder().build();
     return SuccessResponseDto.<UserResponseDto>builder()
         .message("Location updated successfully")
         .status(201)
-        .data(userResponseDto)
         .build();
   }
 
   @Override
   @Transactional
   public SuccessResponseDto<List<UserResponseDto>> getNearByUsers(Long userId) {
-    //if (userId.equals(currentUserService.getCurrentUserId())) {
-      //log.error("User not found with userId: {}", userId);
-      //throw new UserNotFoundException("User not found.");
-    //}
     double radiusMeters = 3_000; // 5KM
-    List<NearbyUserLocation> nearbyLocations =
-        userLocationRepository.findNearbyUserLocations(userId, radiusMeters);
-    List<UserResponseDto> userResponseDtos =
-            nearbyLocations.stream()
-                    .map(n -> maptoUserResponseDto(n))
-                    .toList();
-
     return SuccessResponseDto.<List<UserResponseDto>>builder()
         .message("Nearby users fetched successfully")
         .status(200)
-        .data(userResponseDtos)
+        .data(
+            userLocationRepository.findNearbyUserLocations(userId, radiusMeters).stream()
+                .map(this::maptoUserResponseDto)
+                .toList())
         .build();
   }
 
   private UserResponseDto maptoUserResponseDto(NearbyUserLocation n) {
     try {
       Point p = (Point) new WKTReader().read(n.getLocation());
-
       return UserResponseDto.builder()
-              .id(n.getUserId())
-              .firstName(n.getFirstname())
-              .lastName(n.getLastname())
-              .email(n.getEmail())
-              .latitude(p.getY())
-              .longitude(p.getX())
-              .build();
+          .id(n.getUserId())
+          .firstName(n.getFirstname())
+          .lastName(n.getLastname())
+          .email(n.getEmail())
+          .latitude(p.getY())
+          .longitude(p.getX())
+          .build();
 
     } catch (Exception e) {
       throw new RuntimeException("Invalid geometry", e);

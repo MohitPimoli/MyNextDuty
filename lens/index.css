@@ -1,1 +1,251 @@
 @import "tailwindcss";
+
+/* Dark mode is driven by a `.dark` class on <html> (set by next-themes). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design System tokens (Requirement 1).
+ * Tailwind v4 is CSS-first: every @theme entry becomes both a CSS custom
+ * property and a Tailwind utility namespace (bg-card, text-text-secondary,
+ * rounded-card, shadow-medium, p-3 = 24px, etc.). Components reference these
+ * tokens rather than literal hex/px values.
+ */
+@theme {
+    /* Color — brand */
+    --color-primary: #4F46E5;
+    --color-primary-hover: #4338CA;
+
+    /* Color — semantic */
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+
+    /* Color — surfaces & text (light defaults) */
+    --color-background: #F8FAFC;
+    --color-card: #FFFFFF;
+    --color-border: #E2E8F0;
+    --color-muted: #F1F5F9;
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #64748B;
+    --color-text-inverse: #F8FAFC;
+
+    /* Typography */
+    --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* Font-size scale (≥5 steps) */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+
+    /* Font-weight scale (≥3 steps) */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Spacing — strict 8px scale (≥6 steps) */
+    --spacing-1: 8px;
+    --spacing-2: 16px;
+    --spacing-3: 24px;
+    --spacing-4: 32px;
+    --spacing-5: 40px;
+    --spacing-6: 48px;
+
+    /* Radius */
+    --radius-button: 12px;
+    --radius-input: 12px;
+    --radius-card: 16px;
+    --radius-dialog: 20px;
+
+    /* Elevation (low / medium / high) */
+    --shadow-low: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+    --shadow-medium: 0 4px 12px -2px rgb(15 23 42 / 0.10);
+    --shadow-high: 0 12px 32px -4px rgb(15 23 42 / 0.18);
+
+    /* Motion tokens */
+    --motion-page-duration: 300ms;
+    /* within 200–400ms */
+    --motion-hover-duration: 180ms;
+    /* within 100–250ms */
+    --motion-page-offset: 24px;
+    /* max incoming translate */
+}
+
+/* Dark-mode token overrides (Requirement 1.11) */
+.dark {
+    --color-background: #0F172A;
+    --color-card: #1E293B;
+    --color-border: #334155;
+    --color-muted: #1E293B;
+    --color-text-primary: #F8FAFC;
+    --color-text-secondary: #94A3B8;
+}
+
+/*
+ * shadcn/ui semantic variable mapping.
+ * shadcn primitives reference generic semantic variables (--background,
+ * --foreground, --primary, --muted, --ring, ...). Map them onto the design
+ * tokens above so generated components inherit the same palette in both
+ * light and dark themes.
+ */
+:root {
+    --background: var(--color-background);
+    --foreground: var(--color-text-primary);
+
+    --card: var(--color-card);
+    --card-foreground: var(--color-text-primary);
+
+    --popover: var(--color-card);
+    --popover-foreground: var(--color-text-primary);
+
+    --primary: var(--color-primary);
+    --primary-foreground: var(--color-text-inverse);
+
+    --secondary: var(--color-background);
+    --secondary-foreground: var(--color-text-primary);
+
+    --muted: var(--color-background);
+    --muted-foreground: var(--color-text-secondary);
+
+    --accent: var(--color-background);
+    --accent-foreground: var(--color-text-primary);
+
+    --destructive: var(--color-danger);
+    --destructive-foreground: var(--color-text-inverse);
+
+    --border: var(--color-border);
+    --input: var(--color-border);
+    --ring: var(--color-primary);
+
+    --radius: var(--radius-card);
+}
+
+.dark {
+    --background: var(--color-background);
+    --foreground: var(--color-text-primary);
+
+    --card: var(--color-card);
+    --card-foreground: var(--color-text-primary);
+
+    --popover: var(--color-card);
+    --popover-foreground: var(--color-text-primary);
+
+    --primary: var(--color-primary);
+    --primary-foreground: var(--color-text-inverse);
+
+    --secondary: var(--color-card);
+    --secondary-foreground: var(--color-text-primary);
+
+    --muted: var(--color-card);
+    --muted-foreground: var(--color-text-secondary);
+
+    --accent: var(--color-card);
+    --accent-foreground: var(--color-text-primary);
+
+    --destructive: var(--color-danger);
+    --destructive-foreground: var(--color-text-inverse);
+
+    --border: var(--color-border);
+    --input: var(--color-border);
+    --ring: var(--color-primary);
+}
+
+/* Expose the mapped shadcn variables to Tailwind's utility layer. */
+@theme inline {
+    --color-shadcn-background: var(--background);
+    --color-shadcn-foreground: var(--foreground);
+    --color-shadcn-card: var(--card);
+    --color-shadcn-card-foreground: var(--card-foreground);
+    --color-shadcn-popover: var(--popover);
+    --color-shadcn-popover-foreground: var(--popover-foreground);
+    --color-shadcn-primary: var(--primary);
+    --color-shadcn-primary-foreground: var(--primary-foreground);
+    --color-shadcn-secondary: var(--secondary);
+    --color-shadcn-secondary-foreground: var(--secondary-foreground);
+    --color-shadcn-muted: var(--muted);
+    --color-shadcn-muted-foreground: var(--muted-foreground);
+    --color-shadcn-accent: var(--accent);
+    --color-shadcn-accent-foreground: var(--accent-foreground);
+    --color-shadcn-destructive: var(--destructive);
+    --color-shadcn-border: var(--border);
+    --color-shadcn-input: var(--input);
+    --color-shadcn-ring: var(--ring);
+}
+
+/*
+ * Component animations for Sheet, Dialog, and overlays.
+ * Referenced as Tailwind utility classes: animate-slide-in-left,
+ * animate-slide-in-right, animate-dialog-in, animate-fade-in.
+ */
+@theme inline {
+    --animate-slide-in-left: slide-in-left 300ms ease-out;
+    --animate-slide-in-right: slide-in-right 300ms ease-out;
+    --animate-dialog-in: dialog-in 300ms ease-out;
+    --animate-fade-in: fade-in 200ms ease-out;
+}
+
+@keyframes slide-in-left {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes dialog-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/*
+ * Global token-based focus indicators (Req 17.1, 17.3).
+ *
+ * Applies a focus-visible ring using the primary color token to all
+ * interactive elements. The ring offset ensures the indicator contrasts
+ * at ≥3:1 against the adjacent background. Individual components may
+ * override with more specific focus styles.
+ */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Remove the default outline for elements that specify their own ring via Tailwind */
+[class*="focus-visible:ring"]:focus-visible {
+    outline: none;
+}

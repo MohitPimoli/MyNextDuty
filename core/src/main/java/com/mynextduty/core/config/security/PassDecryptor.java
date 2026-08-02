@@ -13,9 +13,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @Slf4j
 public class PassDecryptor {
   private PassDecryptor() {}
@@ -25,16 +25,17 @@ public class PassDecryptor {
       if (is == null) {
         throw new KeyLoadingException("Private key not found");
       }
-      String privateKeyPEM =
-          new String(is.readAllBytes(), StandardCharsets.UTF_8)
-              .replace("-----BEGIN PRIVATE KEY-----", "")
-              .replace("-----END PRIVATE KEY-----", "")
-              .replaceAll("\\s+", "");
-      byte[] keyBytes = Base64.getDecoder().decode(privateKeyPEM);
-      PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-      return keyFactory.generatePrivate(spec);
+      return KeyFactory.getInstance("RSA")
+          .generatePrivate(
+              new PKCS8EncodedKeySpec(
+                  Base64.getDecoder()
+                      .decode(
+                          new String(is.readAllBytes(), StandardCharsets.UTF_8)
+                              .replace("-----BEGIN PRIVATE KEY-----", "")
+                              .replace("-----END PRIVATE KEY-----", "")
+                              .replaceAll("\\s+", ""))));
     } catch (Exception e) {
+      log.error("Failed to load private key, Error: {}", e.getMessage(), e);
       throw new KeyLoadingException("Failed to load private key", e);
     }
   }
@@ -42,14 +43,15 @@ public class PassDecryptor {
   public String decryptPassword(String encryptedPassword) {
     try {
       Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
-      OAEPParameterSpec oaepParams =
+      cipher.init(
+          Cipher.DECRYPT_MODE,
+          getPrivateKey(),
           new OAEPParameterSpec(
-              "SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT);
-      cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(), oaepParams);
-      byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
-      return new String(decryptedBytes, StandardCharsets.UTF_8);
+              "SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT));
+      return new String(
+          cipher.doFinal(Base64.getDecoder().decode(encryptedPassword)), StandardCharsets.UTF_8);
     } catch (Exception e) {
-      log.error("Failed to decrypt password", e);
+      log.error("Failed to decrypt password, Error: {}", e.getMessage(), e);
       throw new GenericApplicationException("Failed to decrypt password", 400);
     }
   }

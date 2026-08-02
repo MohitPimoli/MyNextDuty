@@ -6,7 +6,6 @@ import com.mynextduty.core.dto.SuccessResponseDto;
 import com.mynextduty.core.dto.auth.AuthRequestDto;
 import com.mynextduty.core.dto.auth.AuthResponseDto;
 import com.mynextduty.core.dto.user.UserRegisterRequestDto;
-import com.mynextduty.core.entity.User;
 import com.mynextduty.core.service.AuthService;
 import com.mynextduty.core.service.CurrentUserService;
 import com.mynextduty.core.service.UserAccountService;
@@ -55,15 +54,13 @@ public class AuthController {
 
   @GetMapping("/verify-email")
   public ResponseDto<GlobalMessageDto> verifyEmail(@RequestParam String token) {
-    GlobalMessageDto result = verificationService.verifyEmail(token);
-    return new SuccessResponseDto<>(result);
+    return new SuccessResponseDto<>(verificationService.verifyEmail(token));
   }
 
   @PostMapping("/resend-verification")
   public ResponseDto<GlobalMessageDto> resendVerification() {
-    User currentUser = currentUserService.getCurrentUser();
-    GlobalMessageDto result = verificationService.resendVerification(currentUser);
-    return new SuccessResponseDto<>(result);
+    return new SuccessResponseDto<>(
+        verificationService.resendVerification(currentUserService.getCurrentUser()));
   }
 
   @PostMapping("/register")

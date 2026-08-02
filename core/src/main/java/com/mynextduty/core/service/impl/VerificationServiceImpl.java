@@ -7,7 +7,6 @@ import com.mynextduty.core.entity.User;
 import com.mynextduty.core.enums.NotificationType;
 import com.mynextduty.core.enums.TemplateType;
 import com.mynextduty.core.repository.EmailVerificationTokenRepository;
-import com.mynextduty.core.repository.UserRepository;
 import com.mynextduty.core.service.NotificationService;
 import com.mynextduty.core.service.VerificationService;
 import java.time.LocalDateTime;
@@ -32,7 +31,6 @@ public class VerificationServiceImpl implements VerificationService {
 
   private final NotificationService notificationService;
   private final EmailVerificationTokenRepository tokenRepository;
-  private final UserRepository userRepository;
 
   @Value("${core.email.verification.tokenExpiryMinutes:}")
   private int tokenExpiryMinutes;
@@ -44,7 +42,6 @@ public class VerificationServiceImpl implements VerificationService {
   @Transactional
   public GlobalMessageDto sendVerificationIfRequired(User user) {
     if (user.isVerified()) {
-      log.info("User {} already verified, skipping verification email", user.getEmail());
       return GlobalMessageDto.builder().message("Email is already verified").build();
     }
     return sendVerificationEmail(user);
@@ -63,19 +60,16 @@ public class VerificationServiceImpl implements VerificationService {
   @Override
   @Transactional
   public GlobalMessageDto verifyEmail(String tokenValue) {
-      Optional<EmailVerificationToken> tokenOpt = tokenRepository.findByToken(tokenValue);
+    Optional<EmailVerificationToken> tokenOpt = tokenRepository.findByToken(tokenValue);
     if (tokenOpt.isEmpty()) {
-      log.warn("Invalid verification token attempted: {}", tokenValue);
       return GlobalMessageDto.builder().message("Invalid verification token").build();
     }
     EmailVerificationToken token = tokenOpt.get();
     if (!token.isValid()) {
       String reason = token.isUsed() ? "already used" : "expired";
-      log.warn("Invalid token for user {}: {}", token.getUser().getEmail(), reason);
       return GlobalMessageDto.builder().message("Verification token is " + reason).build();
     }
-    User user = token.getUser();
-    user.setVerified(true);
+    token.getUser().setVerified(true);
     token.setUsed(true);
     return GlobalMessageDto.builder().message("Email verified successfully").build();
   }
@@ -84,26 +78,23 @@ public class VerificationServiceImpl implements VerificationService {
   private GlobalMessageDto sendVerificationEmail(User user) {
     try {
       String tokenValue = UUID.randomUUID().toString();
-      EmailVerificationToken token =
+      tokenRepository.save(
           EmailVerificationToken.builder()
               .token(tokenValue)
               .user(user)
               .expiresAt(LocalDateTime.now().plusMinutes(tokenExpiryMinutes))
-              .build();
-      tokenRepository.save(token);
-      String verificationLink = baseUrl + "/verify-email?token=" + tokenValue;
+              .build());
       Map<String, Object> emailData = new HashMap<>();
       emailData.put(NAME, user.getFirstName());
-      emailData.put(VERIFICATION_LINK, verificationLink);
+      emailData.put(VERIFICATION_LINK, baseUrl + "/verify-email?token=" + tokenValue);
       emailData.put(EXPIRY_MINUTES, tokenExpiryMinutes);
-      NotificationRequest request =
+      notificationService.send(
           NotificationRequest.builder()
               .recipient(user.getEmail())
               .type(NotificationType.EMAIL)
               .templateType(TemplateType.EMAIL_VERIFICATION)
               .data(emailData)
-              .build();
-      notificationService.send(request);
+              .build());
       return GlobalMessageDto.builder().message("Verification email sent successfully").build();
     } catch (Exception e) {
       log.error("Failed to send verification email to {}", user.getEmail(), e);

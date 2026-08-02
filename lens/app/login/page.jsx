@@ -1,7 +1,12 @@
 "use client";
 
-import AuthPage from "@/src/page/auth/AuthPage";
+import AuthLayout from "@/components/auth/AuthLayout";
+import LoginForm from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
-  return <AuthPage />;
+  return (
+    <AuthLayout>
+      <LoginForm />
+    </AuthLayout>
+  );
 }

@@ -1,0 +1,15 @@
+{
+    "style": "new-york",
+    "tailwind": {
+        "config": "",
+        "css": "index.css",
+        "baseColor": "slate",
+        "cssVariables": true
+    },
+    "aliases": {
+        "components": "@/components",
+        "utils": "@/util",
+        "ui": "@/components/ui",
+        "hooks": "@/hooks"
+    }
+}

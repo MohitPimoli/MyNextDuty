@@ -15,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -35,7 +35,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      log.warn("Missing or invalid Authorization header");
       jwtUtil.writeCustomErrorResponse(
           response,
           HttpServletResponse.SC_UNAUTHORIZED,
@@ -47,7 +46,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     String token = authHeader.substring(7).trim();
     try {
       if (blackListTokenService.isTokenBlackListed(token)) {
-        log.warn("Blacklisted token used: {}", token);
         jwtUtil.writeCustomErrorResponse(
             response,
             HttpServletResponse.SC_UNAUTHORIZED,
@@ -69,7 +67,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
       }
     } catch (ExpiredJwtException e) {
-      log.warn("Expired token: {}", token);
       if (!blackListTokenService.isTokenBlackListed(token)
           && blackListTokenService.blackListAccessToken(token)) {
         log.info("Expired access token blacklisted: {}", token);

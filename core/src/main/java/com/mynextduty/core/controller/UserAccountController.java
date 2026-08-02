@@ -23,11 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAccountController {
   private final UserAccountService userAccountService;
 
-  @PostMapping("/verify-email")
-  public ResponseDto<GlobalMessageDto> verifyEmail() {
-    return new SuccessResponseDto<>(userAccountService.verifyEmail());
-  }
-
   @PostMapping("/verify")
   public ResponseDto<GlobalMessageDto> verify() {
     return new SuccessResponseDto<>(userAccountService.verify());

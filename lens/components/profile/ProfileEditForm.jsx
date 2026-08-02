@@ -287,7 +287,7 @@ const ProfileEditForm = ({
 
       {/* Action buttons */}
       <div className="flex items-center gap-3 pt-2">
-        <Button loading={loading} aria-label="Save profile changes">
+        <Button type="submit" loading={loading} aria-label="Save profile changes">
           Save Changes
         </Button>
         <Button
