@@ -1,0 +1,51 @@
+# Virtual environment
+.venv/
+
+# Environment variables / secrets
+.env
+.env.local
+*.env
+
+# Python cache/build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# uv
+# (uv.lock should NOT be ignored — commit it for reproducibility)
+
+# JetBrains (PyCharm) — since your screenshot shows a PyCharm/IntelliJ project
+.idea
+.idea/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# LangGraph / LangSmith local artifacts
+.langgraph_api/
+*.langgraph_checkpoint
+
+# Logs
+*.log
+
+# Agentic IDE Tools
+.kiro
+.cursor
+.claude
+.vscode
