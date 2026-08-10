@@ -81,10 +81,14 @@ core:
     verification:
      tokenExpiryMinutes: ${EMAIL_VERIFICATION_TOKEN_EXPIRY_MINUTES:15}
   rate-limit:
-    # Bucket capacity per role (max requests allowed before throttling)
+    # Sustained capacity per role (requests allowed in steady state)
+    rate-limit-key-prefix: ${CORE_RATE_LIMIT_REDIS_KEY_REFIX:core:rate-limit}
     default-limit: 100
     admin-limit: 500
     customer-limit: 200
     # Token refill: refill-tokens are added every refill-duration seconds
     refill-tokens: 50
     refill-duration: 60
+    # Burst multiplier: burst capacity = limit * burst-multiplier
+    # Allows short traffic spikes above the sustained rate
+    burst-multiplier: 1.5
