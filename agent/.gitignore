@@ -45,7 +45,8 @@ Thumbs.db
 *.log
 
 # Agentic IDE Tools
-.kiro
-.cursor
-.claude
-.vscode
+.kiro/
+.cursor/
+.claude/
+.vscode/
+DO_NOT_CREATE_STREEING/
